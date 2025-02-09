@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import MobileNavbar from '../components/MobileNavbar'
 import Navbar from '../components/Navbar'
  
 export default function Menu() {
@@ -7,6 +8,7 @@ export default function Menu() {
   return (
     <>
       <Navbar></Navbar>
+      <MobileNavbar></MobileNavbar>
     </>
   )
 }
