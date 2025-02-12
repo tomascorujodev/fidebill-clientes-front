@@ -2,7 +2,7 @@ import { Home, Search, Bell, User } from "lucide-react"
 
 const MobileNavbar = () => {
   return (
-    <nav className="navbar fixed-bottom navbar-light bg-light">
+    <nav style={{bottom: "0"}} className="navbar navbar-light bg-light">
       <div className="container-fluid justify-content-around">
         <a className="nav-link text-center" href="#">
           <Home size={24} />

@@ -4,3 +4,22 @@
     align-items: center; /* Centra verticalmente */
     height: 100vh; /* Ocupar toda la altura de la pantalla */
 }
+
+body{
+    max-width: 650px;
+    margin: 0 auto; /* Centrar horizontalmente */
+    padding: 0;
+}
+
+#root{
+    max-width: 650px;
+    margin: 0 auto; /* Centrar horizontalmente */
+    padding: 0;
+    position: relative;
+}
+
+.navbar{
+    position: sticky;
+    width: 100%;
+    z-index: 100;
+}
