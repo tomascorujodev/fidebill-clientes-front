@@ -1,5 +1,4 @@
 import { useState } from "react";
-import logo from "../assets/LOGOSDCapCut.png"; 
 
 export default function Navbar() {
   function logOut() {
@@ -11,9 +10,6 @@ export default function Navbar() {
     <nav style={{top: "0"}} className="navbar bg-body-tertiary fixed-top">
       <div className="container-fluid">
         <a className="navbar-brand" href="/">Hola Francisco!</a>
-        <a className="navbar-brand" href="/">
-          <img src={logo} alt="FideBill Logo" width="140" height="30" />
-        </a>
         <button
           className="navbar-toggler"
           type="button"
