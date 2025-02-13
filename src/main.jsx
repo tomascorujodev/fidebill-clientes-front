@@ -2,12 +2,11 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import Menu from './views/Menu.jsx'
 import "./assets/css/index.css";
+import App from './App.jsx';
 
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Menu />
-  </StrictMode>,
+    <App />
+  </StrictMode>
 )
-
-//Strict mode hace todo dos veces, ayudando a detectar bugs, solo para desarrollo
