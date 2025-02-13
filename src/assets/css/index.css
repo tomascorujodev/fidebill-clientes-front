@@ -9,10 +9,12 @@ body{
     max-width: 650px;
     margin: 0 auto; /* Centrar horizontalmente */
     padding: 0;
+    height: 100vh;
 }
 
 #root{
     max-width: 650px;
+    height: 100%;
     margin: 0 auto; /* Centrar horizontalmente */
     padding: 0;
     position: relative;
