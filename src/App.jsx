@@ -1,13 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ClientsOffice from "./Layouts/ClientsOffice";
-import Menu from "./Views/Menu";
-import Beneficios from "./Views/Beneficios";
-import Movimientos from "./Views/Movimientos";
+import ClientsOffice from "./layouts/ClientsOffice";
+import Menu from "./views/Menu";
+import Beneficios from "./views/Beneficios";
+import Movimientos from "./views/Movimientos";
 import { useEffect, useState } from "react";
 import ViewLogin from "./views/ViewLogin";
 import ViewCambiarContraseña from "./views/ViewCambiarContraseña";
-import View404 from "./Views/View404";
-import View500 from "./Views/View500";
+import View404 from "./views/View404";
+import View500 from "./views/View500";
 
 function App() {
   const [isLogedIn, setIsLoggedIn] = useState(false);
