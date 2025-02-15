@@ -10,7 +10,7 @@ import View404 from "./Views/View404";
 import View500 from "./Views/View500";
 
 function App() {
-  const [isLogedIn, setIsLoggedIn] = useState(false);
+  const [isLogedIn, setIsLoggedIn] = useState(true);
   const [passwordChange, setPasswordChange] = useState(false);
 //   useEffect(() => {
 //     async function validateFunction (){
