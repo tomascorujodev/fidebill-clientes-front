@@ -10,7 +10,7 @@ import ViewLogin from "./views/ViewLogin";
 import ViewCambiarContraseña from "./views/ViewCambiarContraseña";
 
 function App() {
-  const [isLogedIn, setIsLoggedIn] = useState(false);
+  const [isLogedIn, setIsLoggedIn] = useState(true);
   const [passwordChange, setPasswordChange] = useState(false);
 //   useEffect(() => {
 //     async function validateFunction (){
@@ -32,16 +32,16 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {isLogedIn ?
+        {isLogedIn &&
           <Route element={<ClientsOffice/>}>
             <Route path="/*" element={<Menu></Menu>}></Route>
             <Route path="/beneficios" element={<Beneficios></Beneficios>}></Route>
             <Route path="/movimientos" element={<Movimientos></Movimientos>}></Route>
           </Route>
-          : passwordChange ?
+          /*: passwordChange ?
           <Route path="/*" element={<ViewCambiarContraseña></ViewCambiarContraseña>}></Route>
             :
-          <Route path="/:empresa" element={<ViewLogin setIsLoggedIn={setIsLoggedIn}></ViewLogin>}></Route>
+          <Route path="/*" element={<ViewLogin setIsLoggedIn={setIsLoggedIn}></ViewLogin>}></Route>*/
         }
       </Routes>
     </BrowserRouter>

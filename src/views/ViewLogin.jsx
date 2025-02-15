@@ -45,6 +45,7 @@ export default function ViewLogin({setIsLoggedIn}){
 
   return (
     <div className="container-fluid bg-light min-vh-100 d-flex align-items-center justify-content-center">
+      
       <div className="card shadow-lg" style={{ maxWidth: "400px", width: "100%" }}>
         <div className="card-body p-5">
           <h2 className="card-title text-center mb-4">Iniciar Sesión</h2>
