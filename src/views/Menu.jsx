@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import Navbar from '../Components/Navbar'
-import Carousel from '../Components/Carousel'
-import MobileNavbar from '../Components/MobileNavbar'
+import Navbar from '../components/Navbar'
+import Carousel from '../components/Carousel'
+import MobileNavbar from '../components/MobileNavbar'
 
  
 export default function Menu() {

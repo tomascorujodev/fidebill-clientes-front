@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import "../assets/CSS/ViewLogin.css";
-import { GET, POST } from "../Services/Fetch";
+import "../assets/css/ViewLogin.css";
+import { GET, POST } from "../services/Fetch";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function ViewLogin({setIsLoggedIn}){
