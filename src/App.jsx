@@ -1,14 +1,17 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import ClientsOffice from "./layouts/ClientsOffice";
-import Menu from "./views/Menu";
-import Beneficios from "./views/Beneficios";
-import Movimientos from "./views/Movimientos";
+import ClientsOffice from "./Layouts/ClientsOffice";
+import Menu from "./Views/Menu";
+import Beneficios from "./Views/Beneficios";
+import Movimientos from "./Views/Movimientos";
 import { useEffect, useState } from "react";
 import { GET } from "./Services/Fetch";
 import { LogIn } from "lucide-react";
+import ViewLogin from "./views/ViewLogin";
+import ViewCambiarContraseña from "./views/ViewCambiarContraseña";
 
 function App() {
-  const [isLogedIn, setIsLoggedIn] = useState(true);
+  const [isLogedIn, setIsLoggedIn] = useState(false);
+  const [passwordChange, setPasswordChange] = useState(false);
 //   useEffect(() => {
 //     async function validateFunction (){
 //       let token = sessionStorage.getItem("token");
@@ -35,8 +38,10 @@ function App() {
             <Route path="/beneficios" element={<Beneficios></Beneficios>}></Route>
             <Route path="/movimientos" element={<Movimientos></Movimientos>}></Route>
           </Route>
-          :
-          <Route path="/*" element={<ViewLogin setIsLoggedIn={setIsLoggedIn}></ViewLogin>}></Route>
+          : passwordChange ?
+          <Route path="/*" element={<ViewCambiarContraseña></ViewCambiarContraseña>}></Route>
+            :
+          <Route path="/:empresa" element={<ViewLogin setIsLoggedIn={setIsLoggedIn}></ViewLogin>}></Route>
         }
       </Routes>
     </BrowserRouter>
