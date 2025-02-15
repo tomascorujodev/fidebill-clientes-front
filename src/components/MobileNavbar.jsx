@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const MobileNavbar = () => {
   return (
-    <nav style={{ position: "fixed", bottom: "0" }} className="navbar navbar-light bg-light">
+    <nav style={{ position: "fixed-bottom", bottom: "0", width: "100%" }} className="navbar navbar-light bg-light">
       <div className="container-fluid justify-content-around">
         <Link className="nav-link text-center" to="/">
           <i className="bi bi-house-door" style={{ fontSize: "24px" }}></i>
