@@ -4,10 +4,10 @@ import Menu from "./Views/Menu";
 import Beneficios from "./Views/Beneficios";
 import Movimientos from "./Views/Movimientos";
 import { useEffect, useState } from "react";
-import { GET } from "./Services/Fetch";
-import { LogIn } from "lucide-react";
 import ViewLogin from "./views/ViewLogin";
 import ViewCambiarContraseña from "./views/ViewCambiarContraseña";
+import View404 from "./Views/View404";
+import View500 from "./Views/View500";
 
 function App() {
   const [isLogedIn, setIsLoggedIn] = useState(false);
@@ -32,16 +32,22 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {isLogedIn ?
-          <Route element={<ClientsOffice/>}>
-            <Route path="/*" element={<Menu></Menu>}></Route>
-            <Route path="/beneficios" element={<Beneficios></Beneficios>}></Route>
-            <Route path="/movimientos" element={<Movimientos></Movimientos>}></Route>
-          </Route>
-          : passwordChange ?
-          <Route path="/*" element={<ViewCambiarContraseña></ViewCambiarContraseña>}></Route>
-            :
-          <Route path="/:empresa" element={<ViewLogin setIsLoggedIn={setIsLoggedIn}></ViewLogin>}></Route>
+        {
+          isLogedIn ?
+            <Route element={<ClientsOffice/>}>
+              <Route path="/*" element={<Menu></Menu>}/>
+              <Route path="/beneficios" element={<Beneficios></Beneficios>}/>
+              <Route path="/movimientos" element={<Movimientos></Movimientos>}/>
+            </Route>
+          :  
+            passwordChange ?
+              <Route path="/*" element={<ViewCambiarContraseña></ViewCambiarContraseña>}/>
+              :
+              <>
+                <Route path="/:empresa" element={<ViewLogin setIsLoggedIn={setIsLoggedIn}></ViewLogin>}/>
+                <Route path="/404" element={<View404/>}/>
+                <Route path="/500" element={<View500/>}/>
+              </>
         }
       </Routes>
     </BrowserRouter>

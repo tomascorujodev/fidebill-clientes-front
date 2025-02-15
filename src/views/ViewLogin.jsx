@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../assets/CSS/ViewLogin.css";
-import { POST } from "../Services/Fetch";
-import { useParams } from "react-router-dom";
+import { GET, POST } from "../Services/Fetch";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function ViewLogin({setIsLoggedIn}){
   const { empresa } = useParams();
@@ -9,12 +9,35 @@ export default function ViewLogin({setIsLoggedIn}){
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [mensaje, setMensaje] = useState("");
-  
+  const [estiloBorde, setEstiloBorde] = useState("");
+  const [idEmpresa, setIdEmpresa] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    async function checkEmpresa(){
+      let rsp = await GET("authclientes/checkempresa", {empresa: empresa});
+      switch (rsp.status){
+        case 200:
+          rsp = await rsp.json();
+          setEstiloBorde(rsp.response.colorPrincipal);
+          setIdEmpresa(rsp.response.idEmpresa);
+          return;
+        case 404:
+          console.log("400");
+          navigate("/404");
+          return;
+        case 500:
+          navigate("/500");
+          return;
+        }
+    }
+    checkEmpresa();
+  }, [])
   async function handleSubmit(e) {
       e.preventDefault();
       setIsLoading(true);
       try {
-        let response = await POST("authclientes/login", { Documento: documento, Password: password, Empresa: empresa });
+        let response = await POST("authclientes/login", { Documento: documento, Password: password, IdEmpresa: idEmpresa });
         setIsLoading(false);
         if (response) {
           switch (response.status) {
@@ -45,7 +68,7 @@ export default function ViewLogin({setIsLoggedIn}){
 
   return (
     <div className="container-fluid bg-light min-vh-100 d-flex align-items-center justify-content-center">
-      <div className="card shadow-lg" style={{ maxWidth: "400px", width: "100%" }}>
+      <div className="card" style={{ maxWidth: "400px", width: "100%", boxShadow: `${estiloBorde} 0px 0rem 2rem` }}>
         <div className="card-body p-5">
           <h2 className="card-title text-center mb-4">Iniciar Sesión</h2>
           <form onSubmit={handleSubmit}>
