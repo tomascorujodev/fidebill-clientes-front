@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../assets/CSS/ViewLogin.css";
+import "../assets/css/ViewLogin.css";
 import { GET, POST } from "../services/Fetch";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -64,13 +64,18 @@ export default function ViewLogin({setIsLoggedIn}){
           setMensaje("Hubo un problema al intentar iniciar sesion. Verifique la conexion");
         }
     } catch {
-        setMensaje("Hubo un problem iniciar sesion. Por favor, contacte con un administrador.");
+        setMensaje("Hubo un problema iniciar sesion. Por favor, contacte con un administrador.");
         setIsLoading(false);
     }
   }
 
   return (
-    <div className="container-fluid bg-light min-vh-100 d-flex align-items-center justify-content-center">
+    <div className="container-fluid bg-light min-vh-100 d-flex flex-column align-items-center justify-content-center">
+
+    <img src="/assets/LOGOSD350x110px.png" alt="..." style={{width : "300px"}}/>
+
+      <br />
+
       <div className="card" style={{ maxWidth: "400px", width: "100%", boxShadow: `${estiloBorde} 0px 0rem 2rem` }}>
         <div className="card-body p-5">
           <h2 className="card-title text-center mb-4">Iniciar Sesión</h2>
@@ -101,15 +106,15 @@ export default function ViewLogin({setIsLoggedIn}){
                 onChange={e => setPassword(e.target.value)}
                 placeholder="Ingrese su contraseña"
                 required
-              />
+                />
             </div>
             {
-                isLoading ?
-                    <div style={{justifySelf: "center"}} className="d-flex spinner-border" role="status">
+              isLoading ?
+              <div style={{justifySelf: "center"}} className="d-flex spinner-border" role="status">
                         <span className="visually-hidden">Cargando...</span>
                     </div>
                 :
-                    <button type="submit" className="btn btn-primary w-100 mt-3 custom-button">
+                <button type="submit" className="btn btn-primary w-100 mt-3 custom-button">
                     Iniciar Sesión
                     </button>
             }
@@ -123,10 +128,10 @@ export default function ViewLogin({setIsLoggedIn}){
       </div>
       {mensaje && 
         <div
-          className="modal fade show"
-          tabIndex="-1"
-          aria-labelledby="modalMessageLabel"
-          style={{ display: "block", paddingRight: "17px" }}
+        className="modal fade show"
+        tabIndex="-1"
+        aria-labelledby="modalMessageLabel"
+        style={{ display: "block", paddingRight: "17px" }}
         >
           <div className="modal-dialog">
             <div className="modal-content">
@@ -140,7 +145,7 @@ export default function ViewLogin({setIsLoggedIn}){
                   data-bs-dismiss="modal"
                   aria-label="Close"
                   onClick={() => setMensaje("")}
-                ></button>
+                  ></button>
               </div>
               <div className="modal-body">
                 {mensaje}
@@ -151,7 +156,7 @@ export default function ViewLogin({setIsLoggedIn}){
                   className="btn btn-secondary"
                   data-bs-dismiss="modal"
                   onClick={() => setMensaje("")}
-                >
+                  >
                   Cerrar
                 </button>
               </div>

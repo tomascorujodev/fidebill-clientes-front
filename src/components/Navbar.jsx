@@ -7,7 +7,7 @@ export default function Navbar() {
   }
 
   return (
-    <nav style={{top: "0"}} className="navbar bg-body-tertiary fixed-top">
+    <nav style={{bottom: "0"}} className="navbar bg-body-tertiary fixed-top">
       <div className="container-fluid">
         <a className="navbar-brand" href="/">Hola Tomás!</a>
         <button
