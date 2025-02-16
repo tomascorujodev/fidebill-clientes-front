@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
-import Navbar from "../Components/Navbar";
-import MobileNavbar from "../Components/mobileNavbar";
+import Navbar from "../components/Navbar";
+import MobileNavbar from "../components/mobileNavbar";
 
 export default function ClientsOffice (){
 

@@ -1,4 +1,4 @@
-import CardBranch from "../Components/CardBranch";
+import CardBranch from "../components/CardBranch";
 
 export default function Beneficios() {
     return (

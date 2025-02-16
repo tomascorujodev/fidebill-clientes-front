@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "../assets/CSS/ViewLogin.css";
-import { GET, POST } from "../Services/Fetch";
+import { GET, POST } from "../services/Fetch";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function ViewLogin({setIsLoggedIn}){
@@ -29,6 +29,9 @@ export default function ViewLogin({setIsLoggedIn}){
         case 500:
           navigate("/500");
           return;
+        default:
+          navigate("/500");
+          return;
         }
     }
     checkEmpresa();
@@ -43,7 +46,7 @@ export default function ViewLogin({setIsLoggedIn}){
           switch (response.status) {
             case 200:
               response = await response.json();
-              sessionStorage.setItem("token", response.token);
+              localStorage.setItem(empresa, response.token);
               setIsLoggedIn(true);
               setMensaje("");
               return;
