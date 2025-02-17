@@ -5,54 +5,75 @@ import Beneficios from "./views/Beneficios";
 import Movimientos from "./views/Movimientos";
 import { useEffect, useState } from "react";
 import ViewLogin from "./views/ViewLogin";
-import ViewCambiarContraseña from "./views/ViewCambiarContraseña";
 import View404 from "./views/View404";
 import View500 from "./views/View500";
 import { GET } from "./services/Fetch";
+import ChangePasswordModal from "./components/ChangePasswordModal";
+import jwtDecode from "./utils/jwtDecode";
+import { Spinner } from "react-bootstrap";
 
-function App() {
+export default function App() {
   const [isLogedIn, setIsLoggedIn] = useState(false);
-  const [passwordChange, setPasswordChange] = useState(false);
+  const [changePassword, setChangePassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     async function validateFunction (){
-      let token = localStorage.getItem(window.location.pathname.slice(1));
-      if(token){
+      try{
+        let empresa = window.location.pathname.split("/")[1];;
+        let token = localStorage.getItem(empresa);
+        if (!token) {
+          setIsLoggedIn(false);
+          setIsLoading(false);
+          return;
+        }
+
+        let decodedToken = jwtDecode(localStorage.getItem("streetdog"));
+        console.log(decodedToken);
+
         let response = await GET("authclientes/validatetoken");
-        if(response.ok){
+        if(response?.ok){
           setIsLoggedIn(true);
         }else{
-          sessionStorage.clear();
-          setIsLoggedIn(false);
+          localStorage.removeItem(empresa);
         }
-      }else{
-        setIsLoggedIn(false);
+      }catch{} finally {
+        setIsLoading(false);  
       }
     }
     validateFunction();
   }, [])
+
   return (
-    <BrowserRouter>
-      <Routes>
-        {
-          isLogedIn ?
+    <>
+    {
+      isLoading ?
+        <div className="d-flex justify-content-center align-items-center vh-100">
+          <Spinner animation="border" variant="primary" />
+        </div>
+      :
+      <>
+      <BrowserRouter>
+        <Routes>
+          {
+            (isLogedIn && !changePassword) ?
             <Route element={<ClientsOffice/>}>
-              <Route path="/*" element={<Menu></Menu>}/>
-              <Route path="/beneficios" element={<Beneficios></Beneficios>}/>
-              <Route path="/movimientos" element={<Movimientos></Movimientos>}/>
-            </Route>
-          :  
-            passwordChange ?
-              <Route path="/*" element={<ViewCambiarContraseña></ViewCambiarContraseña>}/>
-              :
+                <Route path="/:empresa/*" element={<Menu/>}/>
+                <Route path="/:empresa/beneficios" element={<Beneficios/>}/>
+                <Route path="/:empresa/movimientos" element={<Movimientos/>}/>
+              </Route>
+            :  
               <>
                 <Route path="/404" element={<View404/>}/>
-                <Route path="/:empresa" element={<ViewLogin setIsLoggedIn={setIsLoggedIn}></ViewLogin>}/>
+                <Route path="/:empresa" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn}/>}/>
                 <Route path="/500" element={<View500/>}/>
               </>
-        }
-      </Routes>
-    </BrowserRouter>
+          }
+        </Routes>
+      </BrowserRouter>
+      <ChangePasswordModal changePassword={changePassword} setChangePassword={setChangePassword}/>
+      </>
+    }
+    </>
   );
 }
-
-export default App;

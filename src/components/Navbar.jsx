@@ -2,7 +2,7 @@ import { useState } from "react";
 
 export default function Navbar() {
   function logOut() {
-    sessionStorage.clear();
+    localStorage.removeItem(window.location.pathname.slice(1));
     window.location.reload();
   }
 
