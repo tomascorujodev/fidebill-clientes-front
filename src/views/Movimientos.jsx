@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-export default function Movimientos (){
+export default function Movimientos ({setIsLoggedIn}){
     return (
         <>
             

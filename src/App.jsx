@@ -29,7 +29,6 @@ export default function App() {
         }
 
         let decodedToken = jwtDecode(localStorage.getItem("streetdog"));
-        console.log(decodedToken);
 
         let response = await GET("authclientes/validatetoken");
         if(response?.ok){
@@ -58,12 +57,13 @@ export default function App() {
           {
             (isLogedIn && !changePassword) ?
             <Route element={<ClientsOffice/>}>
-                <Route path="/:empresa/*" element={<Menu/>}/>
-                <Route path="/:empresa/beneficios" element={<Beneficios/>}/>
-                <Route path="/:empresa/movimientos" element={<Movimientos/>}/>
+                <Route path="/:empresa/*" element={<Menu setIsLoggedIn={setIsLoggedIn}/>}/>
+                <Route path="/:empresa/beneficios" element={<Beneficios setIsLoggedIn={setIsLoggedIn}/>}/>
+                <Route path="/:empresa/movimientos" element={<Movimientos setIsLoggedIn={setIsLoggedIn}/>}/>
               </Route>
             :  
               <>
+                <Route path="*" element={<View404/>}/>
                 <Route path="/404" element={<View404/>}/>
                 <Route path="/:empresa" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn}/>}/>
                 <Route path="/500" element={<View500/>}/>

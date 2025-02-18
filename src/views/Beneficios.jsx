@@ -1,6 +1,6 @@
 import CardBranch from "../components/CardBranch";
 
-export default function Beneficios() {
+export default function Beneficios({setIsLoggedIn}) {
     return (
         <div style={{ 
             display: "grid",

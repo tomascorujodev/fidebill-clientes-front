@@ -15,7 +15,6 @@ export default function ViewLogin({setIsLoggedIn, setChangePassword}){
 
   useEffect(() => {
     async function checkEmpresa(){
-      console.log("hola")
       let rsp = await GET("authclientes/checkempresa", {empresa: empresa});
       switch (rsp.status){
         case 200:
