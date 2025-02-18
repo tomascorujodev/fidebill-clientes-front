@@ -3,7 +3,7 @@ import "../assets/css/ViewLogin.css";
 import { GET, POST } from "../services/Fetch";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function ViewLogin({setIsLoggedIn}){
+export default function ViewLogin({setIsLoggedIn, setChangePassword}){
   const { empresa } = useParams();
   const [documento, setDocumento] = useState("");
   const [password, setPassword] = useState("");
@@ -23,14 +23,16 @@ export default function ViewLogin({setIsLoggedIn}){
           setIdEmpresa(rsp.response.idEmpresa);
           return;
         case 404:
-          console.log("400");
           navigate("/404");
           return;
         case 500:
           navigate("/500");
           return;
+        default:
+          navigate("/500");
+          return;
         }
-    }
+      }
     checkEmpresa();
   }, [])
   async function handleSubmit(e) {
@@ -42,8 +44,11 @@ export default function ViewLogin({setIsLoggedIn}){
         if (response) {
           switch (response.status) {
             case 200:
+              if(documento === password){
+                setChangePassword(true);
+              }
               response = await response.json();
-              sessionStorage.setItem("token", response.token);
+              localStorage.setItem(empresa, response.token);
               setIsLoggedIn(true);
               setMensaje("");
               return;
@@ -61,7 +66,7 @@ export default function ViewLogin({setIsLoggedIn}){
           setMensaje("Hubo un problema al intentar iniciar sesion. Verifique la conexion");
         }
     } catch {
-        setMensaje("Hubo un problema iniciar sesion. Por favor, contacte con un administrador.");
+        setMensaje("Hubo un problema al iniciar sesion. Por favor, contacte con un administrador.");
         setIsLoading(false);
     }
   }

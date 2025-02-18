@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function Navbar() {
+  const { empresa } = useParams();
+  const navigate = useNavigate();
   function logOut() {
-    sessionStorage.clear();
-    window.location.reload();
+    localStorage.removeItem(empresa);
+    window.location.replace(`/${empresa}`);
   }
 
   return (

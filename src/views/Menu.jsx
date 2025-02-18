@@ -1,15 +1,13 @@
-import { useState } from 'react'
-import Navbar from '../components/Navbar'
 import Carousel from '../components/Carousel'
-import MobileNavbar from '../components/MobileNavbar'
+import useAuthValidation from '../hooks/useAuthValidation'
 
  
-export default function Menu() {
-  const [count, setCount] = useState(0)
+export default function Menu({setIsLoggedIn}) {
+  useAuthValidation(setIsLoggedIn)
 
   return (
     <>
-      <Carousel></Carousel>
+      <Carousel/>
     </>
   )
 }

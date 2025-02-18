@@ -7,7 +7,7 @@ export async function GET(url, data){
         method: 'GET',
         mode: 'cors',
         headers:{
-            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem(window.location.pathname.slice(1))}`
         }
     })
     .then((res) => res)
@@ -20,7 +20,21 @@ export async function POST(url, data){
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${sessionStorage.getItem('token')}`
+            'Authorization': `Bearer ${localStorage.getItem(window.location.pathname.slice(1))}`
+        },
+        body: JSON.stringify(data)
+        })
+        .then((res)=>res)
+        .catch((err)=> console.log(err))
+}
+
+export async function PATCH(url, data){
+    return await fetch (backendurl + url, {
+        method: 'PATCH',
+        mode: 'cors',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem(window.location.pathname.slice(1))}`
         },
         body: JSON.stringify(data)
         })
