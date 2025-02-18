@@ -1,16 +1,23 @@
-import { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function Navbar() {
   const { empresa } = useParams();
   const navigate = useNavigate();
+
   function logOut() {
     localStorage.removeItem(empresa);
     window.location.replace(`/${empresa}`);
   }
 
   return (
-    <nav style={{bottom: "0"}} className="navbar bg-body-tertiary fixed-top">
+    <nav
+      className="navbar bg-body-tertiary fixed-top"
+      style={{
+        bottom: "0",
+        boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)", // Sombra inferior igual a la del navbar de abajo
+        zIndex: 1050, // Asegura que quede sobre otros elementos
+      }}
+    >
       <div className="container-fluid">
         <a className="navbar-brand" href="/">Hola Tomás!</a>
         <button

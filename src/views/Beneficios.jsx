@@ -1,6 +1,20 @@
+import { useEffect, useState } from "react";
 import CardBranch from "../components/CardBranch";
+import { GET } from "../services/Fetch";
+import { data } from "react-router-dom";
 
 export default function Beneficios({setIsLoggedIn}) {
+    const [locales, setLocales] = useState (null);
+    useEffect ( () => {
+        async function  obtenerLocales () {
+            let result = await GET ("vistaclientes/obtenerlocales")
+            result = await result.json ()
+            setLocales (result) 
+        }
+        obtenerLocales();
+    }, []) 
+    console.log (locales)
+
     return (
         <div style={{ 
             display: "grid",
@@ -11,11 +25,12 @@ export default function Beneficios({setIsLoggedIn}) {
             margin: "0 auto", // Centrar el grid en la pantalla
             justifyContent: "center",
         }}>
-            <CardBranch />
-            <CardBranch />
-            <CardBranch />
-            <CardBranch />
-            <CardBranch />
+        {
+            locales &&
+            locales.map(local => (
+                <CardBranch key={local.direccionLocal} titulo={local.direccionLocal} />
+            ))
+        }        
         </div>
     );
 }

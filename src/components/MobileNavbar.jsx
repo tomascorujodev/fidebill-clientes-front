@@ -1,11 +1,18 @@
 import { Link, useParams } from "react-router-dom";
 
-export default function MobileNavbar(){
+export default function MobileNavbar() {
   const { empresa } = useParams();
 
   return (
-    <nav style={{ position: "fixed-bottom", bottom: "0", width: "100%" }} className="navbar navbar-light bg-light">
-      <div className="container-fluid justify-content-around">
+    <nav
+      className="navbar bg-light fixed-bottom"
+      style={{
+        width: "100%", // Asegura que ocupe todo el ancho de la pantalla
+        zIndex: 1000, // Para que quede sobre otros elementos
+        boxShadow: "0 -2px 5px rgba(0, 0, 0, 0.1)", // Sombra para mejor visibilidad
+      }}
+    >
+      <div className="container-fluid d-flex justify-content-around">
         <Link className="nav-link text-center" to={`/${empresa}/menu`}>
           <i className="bi bi-house-door" style={{ fontSize: "24px" }}></i>
           <div className="small">Inicio</div>
@@ -25,4 +32,4 @@ export default function MobileNavbar(){
       </div>
     </nav>
   );
-};
+}

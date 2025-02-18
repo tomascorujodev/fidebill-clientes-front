@@ -14,6 +14,7 @@ body{
 
 #root{
     max-width: 650px;
+    min-height: 100vh;
     height: 100%;
     margin: 0 auto; /* Centrar horizontalmente */
     padding: 0;
