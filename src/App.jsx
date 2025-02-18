@@ -9,7 +9,6 @@ import View404 from "./views/View404";
 import View500 from "./views/View500";
 import { GET } from "./services/Fetch";
 import ChangePasswordModal from "./components/ChangePasswordModal";
-import jwtDecode from "./utils/jwtDecode";
 import { Spinner } from "react-bootstrap";
 
 export default function App() {
@@ -20,15 +19,13 @@ export default function App() {
   useEffect(() => {
     async function validateFunction (){
       try{
-        let empresa = window.location.pathname.split("/")[1];;
+        let empresa = window.location.pathname.slice(1).split('/')[0];
         let token = localStorage.getItem(empresa);
         if (!token) {
           setIsLoggedIn(false);
           setIsLoading(false);
           return;
         }
-
-        let decodedToken = jwtDecode(localStorage.getItem("streetdog"));
 
         let response = await GET("authclientes/validatetoken");
         if(response?.ok){

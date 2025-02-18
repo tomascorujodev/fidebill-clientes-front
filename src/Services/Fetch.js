@@ -7,7 +7,7 @@ export async function GET(url, data){
         method: 'GET',
         mode: 'cors',
         headers:{
-            'Authorization': `Bearer ${localStorage.getItem(window.location.pathname.split('/').filter(Boolean)[0])}`
+            'Authorization': `Bearer ${localStorage.getItem(window.location.pathname.slice(1).split('/')[0])}`
         }
     })
     .then((res) => res)
@@ -20,7 +20,7 @@ export async function POST(url, data){
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem(window.location.pathname.slice(1))}`
+            'Authorization': `Bearer ${localStorage.getItem(window.location.pathname.slice(1).split('/')[0])}`
         },
         body: JSON.stringify(data)
         })
@@ -34,7 +34,7 @@ export async function PATCH(url, data){
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem(window.location.pathname.slice(1))}`
+            'Authorization': `Bearer ${localStorage.getItem(window.location.pathname.slice(1).split('/')[0])}`
         },
         body: JSON.stringify(data)
         })
