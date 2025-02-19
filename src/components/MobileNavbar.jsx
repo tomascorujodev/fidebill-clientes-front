@@ -10,6 +10,7 @@ export default function MobileNavbar() {
         width: "100%", // Asegura que ocupe todo el ancho de la pantalla
         zIndex: 1000, // Para que quede sobre otros elementos
         boxShadow: "0 -2px 5px rgba(0, 0, 0, 0.1)", // Sombra para mejor visibilidad
+        position:"fixed-bottom",
       }}
     >
       <div className="container-fluid d-flex justify-content-around">
@@ -17,7 +18,7 @@ export default function MobileNavbar() {
           <i className="bi bi-house-door" style={{ fontSize: "24px" }}></i>
           <div className="small">Inicio</div>
         </Link>
-        <Link className="nav-link text-center" to={`/${empresa}/consumos`}>
+        <Link className="nav-link text-center" to={`/${empresa}/movimientos`}>
           <i className="bi bi-cup-straw" style={{ fontSize: "24px" }}></i>
           <div className="small">Consumos</div>
         </Link>
