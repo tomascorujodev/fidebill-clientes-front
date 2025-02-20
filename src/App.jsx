@@ -52,7 +52,7 @@ export default function App() {
       <BrowserRouter>
         <Routes>
           {
-            (isLogedIn && !changePassword) ?
+            isLogedIn ?
             <Route element={<ClientsOffice/>}>
                 <Route path="/:empresa/*" element={<Menu setIsLoggedIn={setIsLoggedIn}/>}/>
                 <Route path="/:empresa/beneficios" element={<Beneficios setIsLoggedIn={setIsLoggedIn}/>}/>
@@ -67,8 +67,8 @@ export default function App() {
               </>
           }
         </Routes>
+        <ChangePasswordModal changePassword={changePassword} setChangePassword={setChangePassword}/>
       </BrowserRouter>
-      <ChangePasswordModal changePassword={changePassword} setChangePassword={setChangePassword}/>
       </>
     }
     </>
