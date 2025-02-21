@@ -4,7 +4,7 @@ export default function MobileNavbar() {
   const { empresa } = useParams();
 
   return (
-    <nav className={"bg-light shadow-sm"} style={{position: "fixed", bottom: 0, width: "650px"}}>
+    <nav className={"bg-light shadow-lg"} style={{ position: "fixed", bottom: 0, width: "650px"}}>
       <div className="container d-flex justify-content-around py-2">
         <Link className="nav-link text-center" to={`/${empresa}/menu`}>
           <i className="bi bi-house-door fs-4"></i>
