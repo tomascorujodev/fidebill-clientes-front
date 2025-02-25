@@ -9,7 +9,7 @@ export default function MobileNavbar() {
   }
 
   return (
-    <nav className={"bg-light shadow-lg"} style={{ position: "fixed", bottom: 0, width: "100%", maxWidth: "650px" }}>
+    <nav className={"bg-light shadow-lg"} style={{ position: "fixed", bottom: 0, width: "100%", maxWidth: "650px", zIndex: 1050 }}>
       <div className="container d-flex justify-content-around py-2">
         <Link className="nav-link text-center" to={`/${empresa}/menu`}>
           <i className="bi bi-house-door fs-4"></i>
@@ -31,10 +31,8 @@ export default function MobileNavbar() {
           aria-controls="offcanvasNavbar"
           aria-label="Toggle navigation"
         >
-          <Link className="nav-link text-center" to={`/${empresa}/mas`}>
             <i className="bi bi-plus fs-4"></i>
             <div className="small">Más</div>
-          </Link>
         </button>
       </div>
       <div
@@ -42,6 +40,7 @@ export default function MobileNavbar() {
         tabIndex="-1"
         id="offcanvasNavbar"
         aria-labelledby="offcanvasNavbarLabel"
+        data-bs-backdrop="false"
       >
         <div className="offcanvas-header">
           <h5 className="offcanvas-title" id="offcanvasNavbarLabel">

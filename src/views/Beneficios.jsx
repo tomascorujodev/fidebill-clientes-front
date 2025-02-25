@@ -21,8 +21,8 @@ export default function Beneficios({setIsLoggedIn}) {
             gridTemplateColumns: "repeat(auto-fit, minmax(18rem, 1fr))", 
             gap: "20px",
             width: "100%", 
-            maxWidth: "600px", // Ajustar el ancho máximo para 2 columnas
-            margin: "0 auto", // Centrar el grid en la pantalla
+            maxWidth: "600px",
+            margin: "0 auto",
             justifyContent: "center",
         }}>
         {
