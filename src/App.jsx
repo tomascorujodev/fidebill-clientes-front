@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import ClientsOffice from "./layouts/ClientsOffice";
 import Menu from "./views/Menu";
+import Sucursales from "./views/Sucursales";
 import Beneficios from "./views/Beneficios";
 import Movimientos from "./views/Movimientos";
 import { useEffect, useState } from "react";
@@ -56,6 +57,7 @@ export default function App() {
             isLogedIn ?
             <Route element={<ClientsOffice/>}>
                 <Route path="/:empresa/*" element={<Menu setIsLoggedIn={setIsLoggedIn}/>}/>
+                <Route path="/:empresa/sucursales" element={<Sucursales setIsLoggedIn={setIsLoggedIn}/>}/>
                 <Route path="/:empresa/beneficios" element={<Beneficios setIsLoggedIn={setIsLoggedIn}/>}/>
                 <Route path="/:empresa/movimientos" element={<Movimientos setIsLoggedIn={setIsLoggedIn}/>}/>
               </Route>

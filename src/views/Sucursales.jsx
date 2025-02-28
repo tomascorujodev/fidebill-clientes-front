@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
 import CardBranch from "../components/CardBranch";
 import { GET } from "../services/Fetch";
-import { data } from "react-router-dom";
-import CardBenefit from "../components/CardBenefit";
 
-export default function Beneficios({setIsLoggedIn}) {
+export default function Sucursales({setIsLoggedIn}) {
     const [locales, setLocales] = useState (null);
     useEffect ( () => {
         async function  obtenerLocales () {
@@ -17,6 +15,8 @@ export default function Beneficios({setIsLoggedIn}) {
     console.log (locales)
 
     return (
+        <>
+        <br />
         <div style={{ 
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(18rem, 1fr))", 
@@ -29,9 +29,10 @@ export default function Beneficios({setIsLoggedIn}) {
         {
             locales &&
             locales.map(local => (
-                <CardBenefit key={local.direccionLocal} titulo={local.direccionLocal} />
+                <CardBranch key={local.direccionLocal} titulo={local.direccionLocal} />
             ))
         }        
         </div>
+        </>
     );
 }
