@@ -19,7 +19,7 @@ export default function MobileNavbar() {
           <i className="bi bi-cup-straw fs-4"></i>
           <div className="small">Consumos</div>
         </Link>
-        <Link className="nav-link text-center" to={`/${empresa}/beneficios`}>
+        <Link className="nav-link text-center" to={`/${empresa}/sucursales`}>
           <i className="bi bi-cash fs-4"></i>
           <div className="small">Beneficios</div>
         </Link>
