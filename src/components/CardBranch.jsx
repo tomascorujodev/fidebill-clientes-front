@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 
-export default function CardBranch({ titulo, imagen, puntos }) {
+export default function CardBranch({ titulo, imagen, puntos, idUsuarioEmpresa }) {
   const { empresa } = useParams();
 
   return (
@@ -14,7 +14,7 @@ export default function CardBranch({ titulo, imagen, puntos }) {
         <h5 className="card-title">{titulo}</h5>
         <p>{puntos}</p>
         <Link 
-          to={`/${empresa}/beneficios`} 
+          to={`/${empresa}/beneficios?id=${idUsuarioEmpresa}`} 
           className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
         >
           <i className="bi bi-gift-fill fs-5"></i>

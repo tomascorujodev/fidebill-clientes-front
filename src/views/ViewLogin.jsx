@@ -3,20 +3,20 @@ import "../assets/css/ViewLogin.css";
 import { GET, POST } from "../services/Fetch";
 import { useNavigate, useParams } from "react-router-dom";
 
-export default function ViewLogin({setIsLoggedIn, setChangePassword}){
+export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
   const { empresa } = useParams();
   const [documento, setDocumento] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [estiloBorde, setEstiloBorde] = useState("");
-  const [idEmpresa, setIdEmpresa] = useState("");
+  const [idEmpresa, setIdEmpresa] = useState(""); 
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function checkEmpresa(){
-      let rsp = await GET("authclientes/checkempresa", {empresa: empresa});
-      switch (rsp?.status){
+    async function checkEmpresa() {
+      let rsp = await GET("authclientes/checkempresa", { empresa: empresa });
+      switch (rsp?.status) {
         case 200:
           rsp = await rsp.json();
           setEstiloBorde(rsp.response.colorPrincipal);
@@ -31,50 +31,50 @@ export default function ViewLogin({setIsLoggedIn, setChangePassword}){
         default:
           navigate("/500");
           return;
-        }
       }
+    }
     checkEmpresa();
   }, [])
   async function handleSubmit(e) {
-      e.preventDefault();
-      setIsLoading(true);
-      try {
-        let response = await POST("authclientes/login", { Documento: documento, Password: password, IdEmpresa: idEmpresa });
-        setIsLoading(false);
-        if (response) {
-          switch (response.status) {
-            case 200:
-              if(documento === password){
-                setChangePassword(true);
-              }
-              response = await response.json();
-              localStorage.setItem(empresa, response.token);
-              setIsLoggedIn(true);
-              setMensaje("");
-              return;
-            case 401:
-              setMensaje("Usuario y contraseña incorrectos");
-              return;
-            case 500:
-              setMensaje("Hubo un problema en el servidor. Por favor, contacte con un administrador");
-              return;
-            default:
-              setMensaje("Hubo un problema. Por favor, contacte con un administrador");
-              return;
-          }
-        }else{
-          setMensaje("Hubo un problema al intentar iniciar sesion. Verifique la conexion");
+    e.preventDefault();
+    setIsLoading(true);
+    try {
+      let response = await POST("authclientes/login", { Documento: documento, Password: password, IdEmpresa: idEmpresa });
+      setIsLoading(false);
+      if (response) {
+        switch (response.status) {
+          case 200:
+            if (documento === password) {
+              setChangePassword(true);
+            }
+            response = await response.json();
+            localStorage.setItem(empresa, response.token);
+            setIsLoggedIn(true);
+            setMensaje("");
+            return;
+          case 401:
+            setMensaje("Usuario y contraseña incorrectos");
+            return;
+          case 500:
+            setMensaje("Hubo un problema en el servidor. Por favor, contacte con un administrador");
+            return;
+          default:
+            setMensaje("Hubo un problema. Por favor, contacte con un administrador");
+            return;
         }
+      } else {
+        setMensaje("Hubo un problema al intentar iniciar sesion. Verifique la conexion");
+      }
     } catch {
-        setMensaje("Hubo un problema al iniciar sesion. Por favor, contacte con un administrador.");
-        setIsLoading(false);
+      setMensaje("Hubo un problema al iniciar sesion. Por favor, contacte con un administrador.");
+      setIsLoading(false);
     }
   }
 
   return (
     <div className="container-fluid bg-light min-vh-100 d-flex flex-column align-items-center justify-content-center">
 
-    <img src="/assets/LOGOSD350x110px.png" alt="..." style={{width : "300px"}}/>
+      <img src="/assets/LOGOSD350x110px.png" alt="..." style={{ width: "300px" }} />
 
       <br />
 
@@ -108,17 +108,17 @@ export default function ViewLogin({setIsLoggedIn, setChangePassword}){
                 onChange={e => setPassword(e.target.value)}
                 placeholder="Ingrese su contraseña"
                 required
-                />
+              />
             </div>
             {
               isLoading ?
-              <div style={{justifySelf: "center"}} className="d-flex spinner-border" role="status">
-                        <span className="visually-hidden">Cargando...</span>
-                    </div>
+                <div style={{ justifySelf: "center" }} className="d-flex spinner-border" role="status">
+                  <span className="visually-hidden">Cargando...</span>
+                </div>
                 :
                 <button type="submit" className="btn btn-primary w-100 mt-3 custom-button">
-                    Iniciar Sesión
-                    </button>
+                  Iniciar Sesión
+                </button>
             }
           </form>
           <div className="text-center mt-3">
@@ -128,12 +128,12 @@ export default function ViewLogin({setIsLoggedIn, setChangePassword}){
           </div>
         </div>
       </div>
-      {mensaje && 
+      {mensaje &&
         <div
-        className="modal fade show"
-        tabIndex="-1"
-        aria-labelledby="modalMessageLabel"
-        style={{ display: "block", paddingRight: "17px" }}
+          className="modal fade show"
+          tabIndex="-1"
+          aria-labelledby="modalMessageLabel"
+          style={{ display: "block", paddingRight: "17px" }}
         >
           <div className="modal-dialog">
             <div className="modal-content">
@@ -147,7 +147,7 @@ export default function ViewLogin({setIsLoggedIn, setChangePassword}){
                   data-bs-dismiss="modal"
                   aria-label="Close"
                   onClick={() => setMensaje("")}
-                  ></button>
+                ></button>
               </div>
               <div className="modal-body">
                 {mensaje}
@@ -158,7 +158,7 @@ export default function ViewLogin({setIsLoggedIn, setChangePassword}){
                   className="btn btn-secondary"
                   data-bs-dismiss="modal"
                   onClick={() => setMensaje("")}
-                  >
+                >
                   Cerrar
                 </button>
               </div>

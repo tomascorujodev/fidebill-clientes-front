@@ -4,15 +4,14 @@ import { GET } from "../services/Fetch";
 
 export default function Sucursales({setIsLoggedIn}) {
     const [locales, setLocales] = useState (null);
-    useEffect ( () => {
-        async function  obtenerLocales () {
-            let result = await GET ("vistaclientes/obtenerlocales")
-            result = await result.json ()
-            setLocales (result) 
+    useEffect(() => {
+        async function obtenerLocales () {
+            let result = await GET("vistaclientes/obtenerlocales")
+            result = await result.json()
+            setLocales(result) 
         }
         obtenerLocales();
-    }, []) 
-    console.log (locales)
+    }, [])
 
     return (
         <>
@@ -29,7 +28,7 @@ export default function Sucursales({setIsLoggedIn}) {
         {
             locales &&
             locales.map(local => (
-                <CardBranch key={local.direccionLocal} titulo={local.direccionLocal} />
+                <CardBranch key={local.direccionLocal} titulo={local.direccionLocal} idUsuarioEmpresa={local.idUsuarioEmpresa}/>
             ))
         }        
         </div>

@@ -66,6 +66,7 @@ export default function App() {
                 <Route path="*" element={<View404/>}/>
                 <Route path="/404" element={<View404/>}/>
                 <Route path="/:empresa" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn}/>}/>
+                <Route path="/:empresa/*" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn}/>}/>
                 <Route path="/500" element={<View500/>}/>
               </>
           }

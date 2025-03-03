@@ -1,11 +1,8 @@
-import { useState, useEffect } from "react"
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet"
-import { Icon } from "leaflet"
-import "leaflet/dist/leaflet.css"
+import { useState, useEffect } from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { divIcon } from "leaflet"; 
+import "leaflet/dist/leaflet.css";
 
-const Card = ({ children, className = "" }) => (
-  <div className={`rounded-lg border bg-white shadow-sm ${className}`}>{children}</div>
-)
 const sucursales = [
   {
     id: 1,
@@ -21,43 +18,50 @@ const sucursales = [
     lng: -57.5690578,
     imagen: "/assets/LOGOSD400px.png",
   },
-]
+];
 
-const customIcon = new Icon({
-  iconUrl: "https://cdn-icons-png.flaticon.com/512/684/684908.png",
-  iconSize: [38, 38],
-})
+const customIcon = divIcon({
+  html: `
+    <svg width="40" height="40" viewBox="0 0 16 16" fill="red" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 0a6 6 0 0 1 6 6c0 4.418-6 10-6 10S2 10.418 2 6a6 6 0 0 1 6-6z"/>
+      <circle cx="8" cy="6" r="3" fill="white"/>
+    </svg>
+  `,
+  className: "custom-marker",
+  iconAnchor: [19, 38],
+});
+
 
 export default function MapBranch() {
-  const [mapCenter, setMapCenter] = useState([-38.0001, -57.5501])
-  const [mapZoom, setMapZoom] = useState(13)
-  const [mapHeight, setMapHeight] = useState("30vh") 
+  const mapCenter = [-38.015, -57.559];
+  const [mapZoom, setMapZoom] = useState(14);
+  const [mapHeight, setMapHeight] = useState("35vh");
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
-        setMapZoom(12)
-        setMapHeight("40vh") 
+        setMapZoom(12);
+        setMapHeight("40vh");
       } else {
-        setMapZoom(13)
-        setMapHeight("50vh") 
+        setMapZoom(13);
+        setMapHeight("50vh");
       }
-    }
+    };
 
-    window.addEventListener("resize", handleResize)
-    handleResize() 
+    window.addEventListener("resize", handleResize);
+    handleResize();
 
-    return () => window.removeEventListener("resize", handleResize)
-  }, [])
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
-    <Card className="w-full max-w-3xl mx-auto overflow-hidden">
+    <div className="rounded-lg border bg-white shadow-sm w-full max-w-3xl mx-auto overflow-hidden">
       <div className="p-0">
-        <MapContainer 
-          center={mapCenter} 
-          zoom={mapZoom} 
-          style={{ height: mapHeight, width: "100%" }} 
-          zoomControl={false}  
+        <MapContainer
+          center={mapCenter}
+          zoom={mapZoom}
+          style={{ height: mapHeight, width: "100%" }}
+          zoomControl={false}
           attributionControl={false}
         >
           <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
@@ -78,6 +82,6 @@ export default function MapBranch() {
           ))}
         </MapContainer>
       </div>
-    </Card>
-  )
+    </div>
+  );
 }

@@ -12,7 +12,6 @@ export default function Menu({ setIsLoggedIn }) {
   
   return (
     <>
-
       <MapBranch />
       <br />
       <Carousel />
