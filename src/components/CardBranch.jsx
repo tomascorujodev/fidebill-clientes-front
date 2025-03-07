@@ -1,19 +1,22 @@
 import { Link, useParams } from "react-router-dom";
+import "../assets/css/CardBenefit.css"
 
 export default function CardBranch({ titulo, imagen, puntos, idUsuarioEmpresa }) {
   const { empresa } = useParams();
 
   return (
-    <div className="card" style={{ width: "18rem" }}>
+    <div className="promo-card">
       <img
-        src="/assets/LOGOSD400px.png"
+        src="/assets/LOGOSD350x110px.png"
+        style={{height: "15.8rem", objectFit: "contain"}}
         className="card-img-top fixed"
         alt="..."
       />
-      <div className="card-body text-center">
+      <div style={{padding: "15px"}} className="card-body text-center d-flex flex-column">
         <h5 className="card-title">{titulo}</h5>
         <p>{puntos}</p>
-        <Link 
+        <Link
+        style={{marginTop: "auto"}}
           to={`/${empresa}/beneficios?id=${idUsuarioEmpresa}`} 
           className="btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2"
         >

@@ -15,7 +15,6 @@ export default function Sucursales({setIsLoggedIn}) {
 
     return (
         <>
-        <br />
         <div style={{ 
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(18rem, 1fr))", 
@@ -24,6 +23,7 @@ export default function Sucursales({setIsLoggedIn}) {
             maxWidth: "600px",
             margin: "0 auto",
             justifyContent: "center",
+            justifyItems: "center"
         }}>
         {
             locales &&

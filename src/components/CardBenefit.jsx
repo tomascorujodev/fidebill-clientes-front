@@ -4,22 +4,20 @@ import WeekDays from "./WeekDays"
 
 export default function CardBenefit({ tipo, descripcion, dias, porcentajeReintegro = null, fechaInicio, fechaFin, sucursales, urlImagen }) {
   const [expanded, setExpanded] = useState(false);
-  
-  function formatDate (dateString) {
+
+  function formatDate(dateString) {
     if (!dateString) return "indefinido"
     const date = new Date(dateString)
     return date.toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" })
   }
-  
+
   fechaInicio = formatDate(fechaInicio);
   fechaFin = formatDate(fechaFin);
-
-  let imageSrc = urlImagen || "/assets/LOGOSD400px.png"
 
   return (
     <div className={`promo-card ${expanded ? "expanded" : ""}`}>
       <div className="promo-card-header">
-        <img src={imageSrc || "/placeholder.svg"} className="promo-logo" onError={(e) => e.target.src = "/assets/LOGOSD400px.png"} />
+        <img src={urlImagen} className="promo-logo" onError={ (e) => {if (!e.target.dataset.fallback) { e.target.src = "/assets/LOGOSD350x110px.png"; e.target.dataset.fallback = "true"; e.target.style.width = "110px";}} } />
         {
           porcentajeReintegro &&
           <div className="promo-badge">{porcentajeReintegro}% de reintegro</div>
@@ -40,7 +38,7 @@ export default function CardBenefit({ tipo, descripcion, dias, porcentajeReinteg
             <div className="promo-detail-item">
               <span className="detail-label">Vigencia:</span>
               <span className="detail-value">
-                {(fechaInicio === "indefinido" && fechaFin === "indefinido") ? "Sin vencimiento" : (fechaInicio === "indefinido" ? `Beneficio valido hasta el: ${fechaFin}` : (fechaInicio + " - " + fechaFin)) }
+                {(fechaInicio === "indefinido" && fechaFin === "indefinido") ? "Sin vencimiento" : (fechaInicio === "indefinido" ? `Beneficio valido hasta el: ${fechaFin}` : (fechaInicio + " - " + fechaFin))}
               </span>
             </div>
 
