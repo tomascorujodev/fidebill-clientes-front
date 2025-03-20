@@ -1,5 +1,7 @@
 const Carousel = () => {
     return (
+      <div className="container">
+
       <div className="w-full max-w-3xl mx-auto p-0 mt-0">
         <div id="carouselExampleFade" className="carousel slide carousel-fade">
           <div className="carousel-inner">
@@ -22,6 +24,7 @@ const Carousel = () => {
             <span className="visually-hidden">Next</span>
           </button>
         </div>
+      </div>
       </div>
     )
   }

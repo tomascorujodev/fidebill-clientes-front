@@ -1,6 +1,7 @@
 .card-transaction {
   margin-bottom: 1rem;
   transition: all 0.3s ease;
+  font-family: "Gotham Rounded Medium", sans-serif !important;
 }
 
 .card-transaction:hover {

@@ -15,6 +15,7 @@ export default function CardBenefit({ tipo, descripcion, dias, porcentajeReinteg
   fechaFin = formatDate(fechaFin);
 
   return (
+
     <div className={`promo-card ${expanded ? "expanded" : ""}`}>
       <div className="promo-card-header">
         <img src={urlImagen} className="promo-logo" onError={(e) => { if (!e.target.dataset.fallback) { e.target.src = "/assets/LOGOSD350x110px.png"; e.target.dataset.fallback = "true"; e.target.style.width = "110px"; } }} />

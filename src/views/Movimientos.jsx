@@ -18,8 +18,10 @@ export default function Movimientos({ setIsLoggedIn }) {
         <div style={{
             display: "grid",
             gridTemplateColumns: "1fr",
-            gap: "20px",
+            gap: "30px",
             padding: "20px",
+            paddingTop: "30px", // Ajusta según la altura del Navbar
+                
 
         }}>
             {

@@ -16,7 +16,7 @@ const sucursales = [
     nombre: "Independencia 4169",
     lat: -38.0159271,
     lng: -57.5690578,
-    imagen: "/assets/LOGOSD400px.png",
+    imagen: "/assets/LOGOSD350x110px.png",
   },
 ];
 
@@ -55,12 +55,17 @@ export default function MapBranch() {
   }, []);
 
   return (
+    <>
+    
+    <br />
+    <div className="container">
+
     <div className="rounded-lg border bg-white shadow-sm w-full max-w-3xl mx-auto overflow-hidden">
       <div className="p-0">
         <MapContainer
           center={mapCenter}
           zoom={mapZoom}
-          style={{ height: mapHeight, width: "100%" }}
+          style={{ height: mapHeight, width: "100%"}}
           zoomControl={false}
           attributionControl={false}
         >
@@ -83,5 +88,7 @@ export default function MapBranch() {
         </MapContainer>
       </div>
     </div>
+    </div>
+    </>
   );
 }

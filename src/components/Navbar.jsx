@@ -14,7 +14,8 @@ export default function CustomNavbar() {
   }
 
   return (
-    <Navbar bg="light" expand="lg" fixed="top" className="custom-navbar">
+    <>
+    <Navbar bg="light" expand="lg" fixed="top" className="rounded-navbar">
       <Container fluid>
         <Navbar.Brand className="d-flex align-items-center">
           <FaUser className="me-2" />
@@ -39,6 +40,7 @@ export default function CustomNavbar() {
         </Navbar.Collapse>
       </Container>
     </Navbar>
+    </>
   )
 }
 

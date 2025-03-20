@@ -5,7 +5,8 @@ export default function CardBranch({ titulo, imagen, puntos, idUsuarioEmpresa })
   const { empresa } = useParams();
 
   return (
-    <div className="promo-card">
+    <>
+    <div className="card-rounded">
       <img
         src="/assets/LOGOSD350x110px.png"
         style={{height: "15.8rem", objectFit: "contain"}}
@@ -25,5 +26,6 @@ export default function CardBranch({ titulo, imagen, puntos, idUsuarioEmpresa })
         </Link>
       </div>
     </div>
+    </>
   );
 }
