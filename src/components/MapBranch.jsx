@@ -35,16 +35,13 @@ const customIcon = divIcon({
 export default function MapBranch() {
   const mapCenter = [-38.015, -57.559];
   const [mapZoom, setMapZoom] = useState(14);
-  const [mapHeight, setMapHeight] = useState("35vh");
 
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth <= 768) {
         setMapZoom(12);
-        setMapHeight("40vh");
       } else {
         setMapZoom(13);
-        setMapHeight("50vh");
       }
     };
 
@@ -58,14 +55,14 @@ export default function MapBranch() {
     <>
     
     <br />
-    <div className="container">
+    <div className="container px-1">
 
-    <div className="rounded-lg border bg-white shadow-sm w-full max-w-3xl mx-auto overflow-hidden">
+    <div style={{aspectRatio: "16 / 9"}} className="rounded-lg border bg-white shadow-sm w-full max-w-3xl mx-auto overflow-hidden">
       <div className="p-0">
         <MapContainer
           center={mapCenter}
           zoom={mapZoom}
-          style={{ height: mapHeight, width: "100%"}}
+          style={{aspectRatio: "16 / 9"}}
           zoomControl={false}
           attributionControl={false}
         >

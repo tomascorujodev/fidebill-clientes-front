@@ -11,7 +11,6 @@ import View500 from "./views/View500";
 import { GET } from "./services/Fetch";
 import ChangePasswordModal from "./components/ChangePasswordModal";
 import { Spinner } from "react-bootstrap";
-import MapBranch from "./components/MapBranch";
 
 export default function App() {
   const [isLogedIn, setIsLoggedIn] = useState(false);
@@ -28,7 +27,6 @@ export default function App() {
           setIsLoading(false);
           return;
         }
-
         let response = await GET("authclientes/validatetoken");
         if(response?.ok){
           setIsLoggedIn(true);

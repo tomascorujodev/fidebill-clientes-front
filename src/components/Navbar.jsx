@@ -15,7 +15,7 @@ export default function CustomNavbar() {
 
   return (
     <>
-    <Navbar bg="light" expand="lg" fixed="top" className="rounded-navbar">
+    <Navbar style={{borderColor: `${token.colorPrincipal}`}} bg="light" expand="lg" fixed="top" className="rounded-navbar">
       <Container fluid>
         <Navbar.Brand className="d-flex align-items-center">
           <FaUser className="me-2" />

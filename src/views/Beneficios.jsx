@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { GET } from "../services/Fetch";
 import CardBenefit from "../components/CardBenefit";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 export default function Beneficios({ setIsLoggedIn }) {
     const [beneficios, setBeneficios] = useState(null);
@@ -80,7 +80,7 @@ export default function Beneficios({ setIsLoggedIn }) {
                                     fechaInicio={beneficio.fechaInicio}
                                     fechaFin={beneficio.fechaFin}
                                     sucursales={beneficio.idsUsuariosEmpresas}
-                                    urlImagen={beneficio.urlImagen}
+                                    urlImagen={beneficio.urlImagen ? beneficio.urlImagen : "null"}
                                 />
                             ))
                         }

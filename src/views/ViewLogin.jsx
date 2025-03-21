@@ -20,6 +20,7 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
         case 200:
           rsp = await rsp.json();
           setEstiloBorde(rsp.response.colorPrincipal);
+          console.log(rsp.response.colorPrincipal)
           setIdEmpresa(rsp.response.idEmpresa);
           return;
         case 404:
@@ -74,11 +75,11 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
   return (
     <div className="container-fluid bg-light min-vh-100 d-flex flex-column align-items-center justify-content-center">
 
-      <img src="/assets/LOGOSD350x110px.png" alt="..." style={{ width: "300px" }} />
+      <img src={`/assets/${empresa}.png`} alt="..." style={{ width: "300px" }} />
       <img src="/assets/Socios.png" alt="..." style={{ width: "120px" }} />
       <br />
 
-      <div className="card-rounded" style={{ maxWidth: "400px", width: "100%", boxShadow: `${estiloBorde} 0px 0rem 2rem` }}>
+      <div className="card-rounded" style={{ maxWidth: "400px", width: "100%", borderColor: `${estiloBorde}`, boxShadow: `${estiloBorde} 0px 0rem 2rem` }}>
         <div className="card-body p-5">
           <h2 className="card-title text-center mb-4">Iniciar Sesión</h2>
           <form onSubmit={handleSubmit}>

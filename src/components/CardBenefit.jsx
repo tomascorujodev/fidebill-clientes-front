@@ -1,24 +1,23 @@
 import { useState } from "react"
 import "../assets/css/CardBenefit.css"
 import WeekDays from "./WeekDays"
+import { useParams } from "react-router-dom";
 
-export default function CardBenefit({ tipo, descripcion, dias, porcentajeReintegro = null, fechaInicio, fechaFin, sucursales, urlImagen }) {
+export default function CardBenefit({ tipo, descripcion, dias, porcentajeReintegro = null, fechaInicio, fechaFin, sucursales, urlImagen = "null"}) {
   const [expanded, setExpanded] = useState(false);
+  const { empresa } = useParams();
 
   function formatDate(dateString) {
     if (!dateString) return
     const date = new Date(dateString)
     return date.toLocaleDateString("es-ES", { day: "2-digit", month: "2-digit", year: "numeric" })
   }
-
   fechaInicio = formatDate(fechaInicio);
   fechaFin = formatDate(fechaFin);
-
   return (
-
     <div className={`promo-card ${expanded ? "expanded" : ""}`}>
       <div className="promo-card-header">
-        <img src={urlImagen} className="promo-logo" onError={(e) => { if (!e.target.dataset.fallback) { e.target.src = "/assets/LOGOSD350x110px.png"; e.target.dataset.fallback = "true"; e.target.style.width = "110px"; } }} />
+        <img src={urlImagen} className="promo-logo" onError={(e) => { if (!e.target.dataset.fallback) { e.target.src = `/assets/${empresa}.png`; e.target.dataset.fallback = "true"; e.target.style.width = "110px"; } }} />
         {
           porcentajeReintegro &&
           <div className="promo-badge">{porcentajeReintegro}% de reintegro</div>

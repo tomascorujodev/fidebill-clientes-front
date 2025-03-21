@@ -1,18 +1,8 @@
-import { useEffect, useState } from "react";
 import CardBranch from "../components/CardBranch";
-import { GET } from "../services/Fetch";
+import { useLocales } from "../contexts/LocalesContext";
 
 export default function Sucursales({setIsLoggedIn}) {
-    const [locales, setLocales] = useState (null);
-    useEffect(() => {
-        async function obtenerLocales () {
-            let result = await GET("vistaclientes/obtenerlocales")
-            result = await result.json()
-            setLocales(result) 
-        }
-        obtenerLocales();
-    }, [])
-
+    const locales = useLocales();
     return (
         <>
         <div style={{ 

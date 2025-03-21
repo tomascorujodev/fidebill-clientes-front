@@ -1,14 +1,15 @@
 import { Link, useParams } from "react-router-dom";
 import "../assets/css/CardBenefit.css"
+import jwtDecode from "../utils/jwtDecode";
 
-export default function CardBranch({ titulo, imagen, puntos, idUsuarioEmpresa }) {
+export default function CardBranch({ titulo,  puntos, idUsuarioEmpresa }) {
   const { empresa } = useParams();
-
+  const token = jwtDecode(localStorage.getItem(empresa)); 
   return (
     <>
-    <div className="card-rounded">
+    <div style={{borderColor: `${token?.colorPrincipal}`}} className="card-rounded">
       <img
-        src="/assets/LOGOSD350x110px.png"
+        src={`/assets/${empresa}.png`}
         style={{height: "15.8rem", objectFit: "contain"}}
         className="card-img-top fixed"
         alt="..."
