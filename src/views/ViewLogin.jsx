@@ -10,7 +10,7 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
   const [isLoading, setIsLoading] = useState(false);
   const [mensaje, setMensaje] = useState("");
   const [estiloBorde, setEstiloBorde] = useState("");
-  const [idEmpresa, setIdEmpresa] = useState(""); 
+  const [idEmpresa, setIdEmpresa] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -20,7 +20,6 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
         case 200:
           rsp = await rsp.json();
           setEstiloBorde(rsp.response.colorPrincipal);
-          console.log(rsp.response.colorPrincipal)
           setIdEmpresa(rsp.response.idEmpresa);
           return;
         case 404:
@@ -124,18 +123,18 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
           </form>
           <div className="text-center mt-3">
             <a href="#" className="text-decoration-none">
-              ¿Olvidaste tu contraseña?
+              Registrate en Fidebill
             </a>
           </div>
         </div>
       </div>
-        <div className="mt-4">
-            <img
-              src="/assets/PoweredByFidebill.png"
-              alt="FideBill Logo"
-              width="238"
-              height="44"
-            />
+      <div className="mt-4">
+        <img
+          src="/assets/PoweredByFidebill.png"
+          alt="FideBill Logo"
+          width="238"
+          height="44"
+        />
       </div>
       {mensaje &&
         <div
@@ -173,9 +172,9 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
               </div>
             </div>
           </div>
-          
+
         </div>
-        
+
       }
     </div>
   );

@@ -17,9 +17,29 @@ export default function Movimientos({ setIsLoggedIn }) {
                     setMensaje("Ups... no hay conexion a internet. Verifique la red y vuelva a intentarlo.");
                 }
                 return;
-            } // completar mensajes de error
-            result = await result.json();
-            setTransacciones(result.compras);
+            }
+            switch (result?.status) {
+                case 200:
+                    result = await result.json();
+                    setTransacciones(result.compras);
+                    break;
+                case 204:
+                    setMensaje("Parece que aún no tenes consumos🥺. En cuanto pases a aprovechar las promos que sumen puntos vas a poder ver reflejadas tus transacciones acá🥳")
+                    break;
+                case 401:
+                    localStorage.clear();
+                    setMensaje("Ups... parece que tus credenciales expiraron. Por favor, inicia sesión nuevamente");
+                    setTimeout(() => {
+                        window.location.replace(`/${empresa}`)
+                    }, 4000)
+                    break;
+                case 500:
+                    setMensaje("Ha ocurrido un problema en el servidor. Aguardenos unos minutos y vuelva a intentarlo");
+                    break;
+                default:
+                    setMensaje("Ha ocurrido un problema. Intentaremos solucionarlo lo antes posible👷");
+                    break;
+            }
         }
         obtenerTransacciones();
     }, []);
@@ -46,7 +66,7 @@ export default function Movimientos({ setIsLoggedIn }) {
                 ))
                 :
                     <div style={{textAlign: "center"}} className="card-body">
-                        <h5 className="card-title">{mensaje ? mensaje : "Parece que aún no tienes consumos🥺. En cuanto pases a aprovechar las promos que sumen puntos vas a poder ver reflejadas tus transacciones acá🥳"}</h5>
+                        <h5 className="card-title">{mensaje}</h5>
                     </div>
             }
 
