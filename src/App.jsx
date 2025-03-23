@@ -11,7 +11,7 @@ import View500 from "./views/View500";
 import { GET } from "./services/Fetch";
 import ChangePasswordModal from "./components/ChangePasswordModal";
 import { Spinner } from "react-bootstrap";
-import MapBranch from "./components/MapBranch";
+import ViewRegistroClientes from "./views/ViewRegistroClientes";
 
 export default function App() {
   const [isLogedIn, setIsLoggedIn] = useState(false);
@@ -19,8 +19,8 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    async function validateFunction (){
-      try{
+    async function validateFunction() {
+      try {
         let empresa = window.location.pathname.slice(1).split('/')[0];
         let token = localStorage.getItem(empresa);
         if (!token) {
@@ -28,15 +28,14 @@ export default function App() {
           setIsLoading(false);
           return;
         }
-
         let response = await GET("authclientes/validatetoken");
-        if(response?.ok){
+        if (response?.ok) {
           setIsLoggedIn(true);
-        }else{
+        } else {
           localStorage.removeItem(empresa);
         }
-      }catch{} finally {
-        setIsLoading(false);  
+      } catch { } finally {
+        setIsLoading(false);
       }
     }
     validateFunction();
@@ -44,36 +43,38 @@ export default function App() {
 
   return (
     <>
-    {
-      isLoading ?
-        <div className="d-flex justify-content-center align-items-center vh-100">
-          <Spinner animation="border" variant="primary" />
-        </div>
-      :
-      <>
-      <BrowserRouter>
-        <Routes>
-          {
-            isLogedIn ?
-            <Route element={<ClientsOffice/>}>
-                <Route path="/:empresa/*" element={<Menu setIsLoggedIn={setIsLoggedIn}/>}/>
-                <Route path="/:empresa/sucursales" element={<Sucursales setIsLoggedIn={setIsLoggedIn}/>}/>
-                <Route path="/:empresa/beneficios" element={<Beneficios setIsLoggedIn={setIsLoggedIn}/>}/>
-                <Route path="/:empresa/movimientos" element={<Movimientos setIsLoggedIn={setIsLoggedIn}/>}/>
-              </Route>
-            :  
-              <>
-                <Route path="*" element={<View404/>}/>
-                <Route path="/404" element={<View404/>}/>
-                <Route path="/:empresa" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn}/>}/>
-                <Route path="/500" element={<View500/>}/>
-              </>
-          }
-        </Routes>
-        <ChangePasswordModal changePassword={changePassword} setChangePassword={setChangePassword}/>
-      </BrowserRouter>
-      </>
-    }
+      {
+        isLoading ?
+          <div className="d-flex justify-content-center align-items-center vh-100">
+            <Spinner animation="border" variant="primary" />
+          </div>
+          :
+          <>
+            <BrowserRouter>
+              <Routes>
+                {
+                  isLogedIn ?
+                    <Route element={<ClientsOffice />}>
+                      <Route path="/:empresa/*" element={<Menu setIsLoggedIn={setIsLoggedIn} />} />
+                      <Route path="/:empresa/sucursales" element={<Sucursales setIsLoggedIn={setIsLoggedIn} />} />
+                      <Route path="/:empresa/beneficios" element={<Beneficios setIsLoggedIn={setIsLoggedIn} />} />
+                      <Route path="/:empresa/movimientos" element={<Movimientos setIsLoggedIn={setIsLoggedIn} />} />
+                    </Route>
+                    :
+                    <>
+                      <Route path="*" element={<View404 />} />
+                      <Route path="/404" element={<View404 />} />
+                      <Route path="/:empresa" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn} />} />
+                      <Route path="/:empresa/*" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn} />} />
+                      {/* <Route path="/:empresa/registro" element={<ViewRegistroClientes />} /> */}
+                      <Route path="/500" element={<View500 />} />
+                    </>
+                }
+              </Routes>
+              <ChangePasswordModal changePassword={changePassword} setChangePassword={setChangePassword} />
+            </BrowserRouter>
+          </>
+      }
     </>
   );
 }

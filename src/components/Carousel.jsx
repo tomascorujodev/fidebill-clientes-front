@@ -1,32 +1,27 @@
-const Carousel = () => {
-    return (
-      <div className="w-full max-w-3xl mx-auto p-0 mt-0">
-        <div id="carouselExampleFade" className="carousel slide carousel-fade">
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img src="/assets/SliceDESK1.jpg" className="d-block w-100 h-56 object-cover" alt="..." />
-            </div>
-            <div className="carousel-item">
-              <img src="/assets/SliceDESK2.jpg" className="d-block w-100 h-56 object-cover" alt="..." />
-            </div>
-            <div className="carousel-item">
-              <img src="/assets/SliceDESK3.jpg" className="d-block w-100 h-56 object-cover" alt="..." />
-            </div>
+export default function Carousel() {
+  return (
+    <div style={{ aspectRatio: "4 / 1" }} className="w-full max-w-3xl mx-auto p-0 mt-0">
+      <div id="carouselExampleFade" className=" h-100 w-100 carousel slide carousel-fade">
+        <div className="carousel-inner h-100 w-100">
+          <div className="carousel-item active h-100 w-100">
+            <img src="/assets/SliceDESK1.jpg" className="d-block w-100 h-100 object-cover" alt="..." />
           </div>
-          <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
-            <span className="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span className="visually-hidden">Previous</span>
-          </button>
-          <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
-            <span className="carousel-control-next-icon" aria-hidden="true"></span>
-            <span className="visually-hidden">Next</span>
-          </button>
+          <div className="carousel-item w-100 h-100">
+            <img src="/assets/SliceDESK2.jpg" className="d-block w-100 h-100 object-cover" alt="..." />
+          </div>
+          <div className="carousel-item w-100 h-100">
+            <img src="/assets/SliceDESK3.jpg" className="d-block w-100 h-100 object-cover" alt="..." />
+          </div>
         </div>
+        <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
+          <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Previous</span>
+        </button>
+        <button className="carousel-control-next" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="next">
+          <span className="carousel-control-next-icon" aria-hidden="true"></span>
+          <span className="visually-hidden">Next</span>
+        </button>
       </div>
-    )
-  }
-  
-  export default Carousel;
-  
-  
-
+    </div>
+  )
+}
