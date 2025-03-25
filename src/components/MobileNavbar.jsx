@@ -16,15 +16,15 @@ export default function MobileNavbar() {
       <nav className={"rounded-mobile-navbar"} style={{ position: "fixed", borderColor: `${token.colorPrincipal}`,bottom: 0, width: "100%", maxWidth: "650px", zIndex: 1050 }}>
         <div className="container d-flex justify-content-around py-2">
           <Link className="nav-link text-center flex-grow-1" to={`/${empresa}/menu`}>
-            <i className="bi bi-house-door fs-4"></i>
+            <i className="bi bi-house"></i>
             <div className="small">Inicio</div>
           </Link>
           <Link className="nav-link text-center flex-grow-1" to={`/${empresa}/movimientos`}>
-            <i className="bi bi-cup-straw fs-4"></i>
+            <i className="bi bi-credit-card"></i>
             <div className="small">Consumos</div>
           </Link>
           <Link className="nav-link text-center flex-grow-1" to={`/${empresa}/sucursales`}>
-            <i className="bi bi-cash fs-4"></i>
+            <i className="bi bi-ticket-perforated"></i>
             <div className="small">Beneficios</div>
           </Link>
           <button

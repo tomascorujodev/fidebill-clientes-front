@@ -48,8 +48,10 @@
   
   .rounded-navbar {
     background-color: #ffffff;
-    border-radius: 30px; /* Hace los bordes redondeados */
-    border: 3px solid #ffffff; /* Borde fino de otro color */
+    border-radius:  0 0 30px 30px; /* Hace los bordes redondeados */
+    border-bottom: 3px solid #ffffff; /* Borde fino de otro color */
+    border-left: 3px solid;
+    border-right: 3px solid;
     padding: 10px;
     margin-top: 0px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 1);
@@ -57,8 +59,10 @@
 
   .rounded-mobile-navbar {
     background-color: #ffffff;
-    border-radius: 50px; /* Hace los bordes redondeados */
-    border: 3px solid #ffffff; /* Borde fino de otro color */
+    border-radius: 50px 50px 0 0; /* Hace los bordes redondeados */
+    border-top: 3px solid #ffffff; /* Borde fino de otro color */
+    border-left: 3px solid;
+    border-right: 3px solid;
     padding: 10px;
     margin-top: 0px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 1);
