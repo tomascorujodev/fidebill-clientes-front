@@ -11,7 +11,6 @@ import View500 from "./views/View500";
 import { GET } from "./services/Fetch";
 import ChangePasswordModal from "./components/ChangePasswordModal";
 import { Spinner } from "react-bootstrap";
-import ViewRegistroClientes from "./views/ViewRegistroClientes";
 
 export default function App() {
   const [isLogedIn, setIsLoggedIn] = useState(false);

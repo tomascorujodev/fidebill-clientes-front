@@ -9,7 +9,7 @@ export default function CardTransaction({ tipo, fecha, puntos, monto, descriptio
     <Card className={`card-transaction ${isExchange ? "exchange" : "purchase"}`}>
       <Card.Body>
         <div className="transaction-header">
-          <Badge bg={isExchange ? "warning" : "success"} className="transaction-type">
+          <Badge bg={isExchange ? "warning" : "success"} className="me-2 transaction-type">
             {tipo}
           </Badge>
           <span className="transaction-date">{fecha}</span>
