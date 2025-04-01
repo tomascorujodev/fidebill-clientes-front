@@ -11,6 +11,7 @@ import View500 from "./views/View500";
 import { GET } from "./services/Fetch";
 import ChangePasswordModal from "./components/ChangePasswordModal";
 import { Spinner } from "react-bootstrap";
+import ViewRegistroClientes from "./views/ViewRegistroClientes";
 
 export default function App() {
   const [isLogedIn, setIsLoggedIn] = useState(false);
@@ -65,7 +66,7 @@ export default function App() {
                       <Route path="/404" element={<View404 />} />
                       <Route path="/:empresa" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn} />} />
                       <Route path="/:empresa/*" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn} />} />
-                      {/* <Route path="/:empresa/registro" element={<ViewRegistroClientes />} /> */}
+                      <Route path="/:empresa/registro" element={<ViewRegistroClientes />} />
                       <Route path="/500" element={<View500 />} />
                     </>
                 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../assets/css/ViewLogin.css";
 import { GET, POST } from "../services/Fetch";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 
 export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
   const { empresa } = useParams();
@@ -35,6 +35,7 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
     }
     checkEmpresa();
   }, [])
+  
   async function handleSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
@@ -122,8 +123,10 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
             }
           </form>
           <div className="text-center mt-3">
-            <a href="#" className="text-decoration-none">
+            <Link to="registro">
               Registrate en Fidebill
+            </Link>
+            <a href="#" className="text-decoration-none">
             </a>
           </div>
         </div>

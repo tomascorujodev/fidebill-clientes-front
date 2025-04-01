@@ -22,7 +22,7 @@ export default function Carousel() {
       <div id="carouselExampleFade" className=" h-100 w-100 carousel slide carousel-fade">
         <div className="carousel-inner h-100 w-100">
           {
-            urlImagenes ?
+            urlImagenes &&
               <>
                 <div className="carousel-item active h-100 w-100">
                   <img src={urlImagenes?.imagen1} className="d-block w-100 h-100 object-cover" alt="..." />
@@ -34,8 +34,6 @@ export default function Carousel() {
                   <img src={urlImagenes?.imagen3} className="d-block w-100 h-100 object-cover" alt="..." />
                 </div>
               </>
-              :
-              <div>No se ha podido cargar las imagenes 🥺🥺</div>
           }
         </div>
         <button className="carousel-control-prev" type="button" data-bs-target="#carouselExampleFade" data-bs-slide="prev">
