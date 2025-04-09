@@ -3,7 +3,7 @@ import { GET } from "../services/Fetch";
 import CardBenefit from "../components/CardBenefit";
 import { useParams, useSearchParams } from "react-router-dom";
 
-export default function Beneficios({ setIsLoggedIn }) {
+export default function Beneficios() {
     const [beneficios, setBeneficios] = useState(null);
     const [loading, setLoading] = useState(true);
     const [mensaje, setMensaje] = useState("");

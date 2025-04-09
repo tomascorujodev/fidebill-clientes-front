@@ -1,7 +1,7 @@
 import CardBranch from "../components/CardBranch";
 import { useLocales } from "../contexts/LocalesContext";
 
-export default function Sucursales({setIsLoggedIn}) {
+export default function Sucursales() {
     const locales = useLocales();
     return (
         <>

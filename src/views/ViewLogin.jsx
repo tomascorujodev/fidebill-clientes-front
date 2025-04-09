@@ -1,40 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../assets/css/ViewLogin.css";
-import { GET, POST } from "../services/Fetch";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { POST } from "../services/Fetch";
+import { Link } from "react-router-dom";
+import { useEmpresa } from "../Contexts/EmpresaContext";
 
 export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
-  const { empresa } = useParams();
+  const { empresa, idEmpresa, estiloBorde } = useEmpresa();
   const [documento, setDocumento] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [mensaje, setMensaje] = useState("");
-  const [estiloBorde, setEstiloBorde] = useState("");
-  const [idEmpresa, setIdEmpresa] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    async function checkEmpresa() {
-      let rsp = await GET("authclientes/checkempresa", { empresa: empresa });
-      switch (rsp?.status) {
-        case 200:
-          rsp = await rsp.json();
-          setEstiloBorde(rsp.response.colorPrincipal);
-          setIdEmpresa(rsp.response.idEmpresa);
-          return;
-        case 404:
-          navigate("/404");
-          return;
-        case 500:
-          navigate("/500");
-          return;
-        default:
-          navigate("/500");
-          return;
-      }
-    }
-    checkEmpresa();
-  }, [])
   
   async function handleSubmit(e) {
     e.preventDefault();

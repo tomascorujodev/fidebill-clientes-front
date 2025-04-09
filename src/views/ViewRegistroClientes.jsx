@@ -2,14 +2,20 @@ import { useRef, useState } from "react"
 import { Button, Form, Card, Alert } from "react-bootstrap"
 import React from "react"
 import { POST } from "../services/Fetch"
+import { useEmpresa } from "../Contexts/EmpresaContext";
 
 export default function MultiStepForm() {
-  const [step, setStep] = useState(1)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
-  const [success, setSuccess] = useState("")
-
-  // Form data state
+  const { empresa, idEmpresa, estiloBorde } = useEmpresa();
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [dniVerified, setDniVerified] = useState(false);
+  const [canResend, setCanResend] = useState(false);
+  const [resendTimer, setResendTimer] = useState(60);
+  const [timerActive, setTimerActive] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     verificationCode: "",
@@ -21,15 +27,7 @@ export default function MultiStepForm() {
     phone: "",
     address: "",
   })
-
-  // Email verification state
-  const [emailSent, setEmailSent] = useState(false)
-  const [emailVerified, setEmailVerified] = useState(false)
-
-  // DNI verification state
-  const [dniVerified, setDniVerified] = useState(false)
-
-  const codeInputRefs = useRef([])
+  const codeInputRefs = useRef([]);
 
   const [validationErrors, setValidationErrors] = useState({
     email: "",
@@ -37,32 +35,28 @@ export default function MultiStepForm() {
     phone: "",
   })
 
-  const [canResend, setCanResend] = useState(false)
-  const [resendTimer, setResendTimer] = useState(60)
-  const [timerActive, setTimerActive] = useState(false)
 
-  function validateEmail(email){
+  function validateEmail(email) {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
     return regex.test(email)
   }
 
-  function validateDNI(dni){
+  function validateDNI(dni) {
     const regex = /^\d{8}[A-Z]?$/
     return regex.test(dni)
   }
 
-  function validatePhone(phone){
+  function validatePhone(phone) {
     const regex = /^\d{9,15}$/
     return regex.test(phone)
   }
 
-  function handleChange(e){
+  function handleChange(e) {
     const { name, value } = e.target
     setFormData({
       ...formData,
       [name]: value,
     })
-
     if (name === "email") {
       if (value && !validateEmail(value)) {
         setValidationErrors({
@@ -163,53 +157,53 @@ export default function MultiStepForm() {
     setError("")
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      codeInputRefs.current = codeInputRefs.current.slice(0, 6)
-
-      setEmailSent(true)
-      setSuccess("Código de verificación enviado. Por favor revise su correo.")
-
-      startResendTimer()
-
-      setTimeout(() => {
-        if (codeInputRefs.current[0]) {
-          codeInputRefs.current[0].focus()
+      let rsp = await POST("registroclientes/verificarcorreo", { IdEmpresa: idEmpresa, email: formData.email })
+      if (rsp) {
+        switch (rsp.status) {
+          case 200:
+            codeInputRefs.current = codeInputRefs.current.slice(0, 6)
+            setEmailSent(true);
+            setSuccess("Código de verificación enviado. Por favor revise su correo.");
+            startResendTimer()
+            setTimeout(() => {
+              if (codeInputRefs.current[0]) {
+                codeInputRefs.current[0].focus()
+              }
+            }, 100)
+            break;
+          case 409:
+            rsp = await rsp.json();
+            switch (rsp) {
+              case -1:
+                setError("El correo ya esta en uso");
+                break;
+              case -2:
+                setError("Se ha excedido el limite de reenvios. Por favor, intente nuevamente mas tarde");
+                break;
+              case -3:
+                setStep(2);
+                break;
+            }
+            break;
+          case 500:
+            setError("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana.");
+            break;
+          case 550:
+            setError("Ha ocurrido un error con el envio de correo");
+            break;
         }
-      }, 100)
+      } else {
+        setError("Error al enviar el código de verificación");
+      }
+
+
     } catch (err) {
-      setError("Error al enviar el código de verificación.")
+      setError("Error al enviar el código de verificación")
     } finally {
       setLoading(false)
     }
   }
 
-  async function resendVerificationCode(){
-    setLoading(true)
-    setError("")
-
-    try {
-      let rsp = await new POST("Authclientes/verificarcorreo", )
-      setSuccess("Código de verificación reenviado. Por favor revise su correo.")
-
-      setFormData({
-        ...formData,
-        verificationCode: "",
-      })
-      startResendTimer()
-      setTimeout(() => {
-        if (codeInputRefs.current[0]) {
-          codeInputRefs.current[0].focus()
-        }
-      }, 100)
-    } catch (err) {
-      setError("Error al reenviar el código de verificación.")
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  
   const verifyEmailCode = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -217,7 +211,7 @@ export default function MultiStepForm() {
 
     try {
       // Simulate API call to verify code
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      let rsp = await POST("registroclientes/verificarcorreo",);
 
       // In a real app, you would verify the code with your API
       // const response = await fetch('/api/verify-code', {
@@ -341,7 +335,7 @@ export default function MultiStepForm() {
             <Button
               variant="outline-secondary"
               size="sm"
-              onClick={resendVerificationCode}
+              onClick={sendVerificationCode}
               disabled={loading || timerActive}
               className="resend-button"
             >

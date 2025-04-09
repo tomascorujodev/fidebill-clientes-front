@@ -12,6 +12,7 @@ import { GET } from "./services/Fetch";
 import ChangePasswordModal from "./components/ChangePasswordModal";
 import { Spinner } from "react-bootstrap";
 import ViewRegistroClientes from "./views/ViewRegistroClientes";
+import { EmpresaProvider } from "./Contexts/EmpresaContext";
 
 export default function App() {
   const [isLogedIn, setIsLoggedIn] = useState(false);
@@ -50,29 +51,30 @@ export default function App() {
           </div>
           :
           <>
+
             <BrowserRouter>
               <Routes>
                 {
                   isLogedIn ?
                     <Route element={<ClientsOffice />}>
-                      <Route path="/:empresa/*" element={<Menu setIsLoggedIn={setIsLoggedIn} />} />
-                      <Route path="/:empresa/sucursales" element={<Sucursales setIsLoggedIn={setIsLoggedIn} />} />
-                      <Route path="/:empresa/beneficios" element={<Beneficios setIsLoggedIn={setIsLoggedIn} />} />
-                      <Route path="/:empresa/movimientos" element={<Movimientos setIsLoggedIn={setIsLoggedIn} />} />
+                      <Route path="/:empresa/*" element={<Menu />} />
+                      <Route path="/:empresa/sucursales" element={<Sucursales />} />
+                      <Route path="/:empresa/beneficios" element={<Beneficios />} />
+                      <Route path="/:empresa/movimientos" element={<Movimientos />} />
                     </Route>
                     :
                     <>
                       <Route path="*" element={<View404 />} />
                       <Route path="/404" element={<View404 />} />
-                      <Route path="/:empresa" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn} />} />
-                      <Route path="/:empresa/*" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn} />} />
-                      <Route path="/:empresa/registro" element={<ViewRegistroClientes />} />
+                      <Route path="/:empresa/*" element={<EmpresaProvider><ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn} /></EmpresaProvider>} />
+                      <Route path="/:empresa/registro" element={<EmpresaProvider><ViewRegistroClientes /></EmpresaProvider>} />
                       <Route path="/500" element={<View500 />} />
                     </>
                 }
               </Routes>
               <ChangePasswordModal changePassword={changePassword} setChangePassword={setChangePassword} />
             </BrowserRouter>
+
           </>
       }
     </>
