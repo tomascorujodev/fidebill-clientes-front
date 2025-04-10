@@ -42,7 +42,7 @@ export default function MultiStepForm() {
   }
 
   function validateDNI(dni) {
-    const regex = /^\d{8}[A-Z]?$/
+    const regex = /^[1-9][0-9]{6,8}$/
     return regex.test(dni)
   }
 
@@ -73,7 +73,7 @@ export default function MultiStepForm() {
       if (value && !validateDNI(value)) {
         setValidationErrors({
           ...validationErrors,
-          dni: "Ingrese un DNI válido (8 dígitos y posiblemente una letra)",
+          dni: "Número de DNI inválido",
         })
       } else {
         setValidationErrors({
@@ -116,7 +116,7 @@ export default function MultiStepForm() {
     }
   }
 
-  const handleVerificationCodeKeyDown = (e, index) => {
+  function handleVerificationCodeKeyDown(e, index) {
     if (e.key === "Backspace" && !formData.verificationCode[index] && index > 0) {
       codeInputRefs.current[index - 1].focus()
     }
@@ -157,31 +157,48 @@ export default function MultiStepForm() {
     setError("")
 
     try {
-      let rsp = await POST("registroclientes/verificarcorreo", { IdEmpresa: idEmpresa, email: formData.email })
+      setLoading(true);
+      setSuccess("");
+      setError("");
+      let rsp = await POST("registroclientes/verificarcorreo", { IdEmpresa: idEmpresa, Email: formData.email, reenvio: emailSent })
       if (rsp) {
         switch (rsp.status) {
           case 200:
-            codeInputRefs.current = codeInputRefs.current.slice(0, 6)
+            rsp = await rsp.json();
+            localStorage.setItem(empresa, rsp.token);
+            codeInputRefs.current = codeInputRefs.current.slice(0, 6);
             setEmailSent(true);
-            setSuccess("Código de verificación enviado. Por favor revise su correo.");
-            startResendTimer()
+            setSuccess("Código de verificación enviado. Por favor revise su correo. Verifique también las carpetas de Spam, Correo no deseado o Promociones");
+            startResendTimer();
             setTimeout(() => {
               if (codeInputRefs.current[0]) {
                 codeInputRefs.current[0].focus()
               }
-            }, 100)
+            }, 100);
+            break;
+          case 401:
+            window.location.reload();
             break;
           case 409:
             rsp = await rsp.json();
-            switch (rsp) {
+            switch (rsp.error) {
               case -1:
+                setSuccess("");
                 setError("El correo ya esta en uso");
                 break;
               case -2:
+                setSuccess("");
                 setError("Se ha excedido el limite de reenvios. Por favor, intente nuevamente mas tarde");
                 break;
               case -3:
+                localStorage.setItem(empresa, rsp.token);
+                setSuccess("Este correo ya fue verificado");
                 setStep(2);
+                break;
+              case -4:
+                localStorage.setItem(empresa, rsp.token)
+                setEmailSent(true);
+                setSuccess("Ya tiene un código pendiente. Por favor revise su correo. Verifique también las carpetas de Spam, Correo no deseado o Promociones.");
                 break;
             }
             break;
@@ -198,41 +215,72 @@ export default function MultiStepForm() {
 
 
     } catch (err) {
+      setSuccess("");
       setError("Error al enviar el código de verificación")
     } finally {
       setLoading(false)
     }
   }
 
-  const verifyEmailCode = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
+  async function verifyEmailCode(e) {
+    e.preventDefault();
+    setSuccess("");
+    if (formData.verificationCode.length !== 6) {
+      setError("El código debe tener 6 dígitos.");
+      return;
+    }
+    setError("");
+    setLoading(true);
 
     try {
-      // Simulate API call to verify code
-      let rsp = await POST("registroclientes/verificarcorreo",);
-
-      // In a real app, you would verify the code with your API
-      // const response = await fetch('/api/verify-code', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     email: formData.email,
-      //     code: formData.verificationCode
-      //   })
-      // });
-
-      // For demo purposes, we'll consider any 6-digit code as valid
-      if (formData.verificationCode.length === 6) {
-        setEmailVerified(true)
-        setStep(2)
-        setSuccess("Correo verificado correctamente.")
+      let rsp = await POST("registroclientes/verificarcodigo", { codigo: formData.verificationCode });
+      if (rsp) {
+        switch (rsp.status) {
+          case 200:
+            setEmailVerified(true);
+            setStep(2);
+            setSuccess("Correo verificado correctamente");
+            break;
+          case 401:
+            window.location.reload();
+            break;
+          case 409:
+            rsp = await rsp.json();
+            switch (rsp) {
+              case -1:
+                setError("No se ha podido procesar la solicitud");
+                break;
+              case -2:
+                setError("Se ha excedido el limite de intentos. Debe generar un correo nuevo");
+                break;
+              case -3:
+                setEmailSent(false);
+                setError("Su código de verificación expiró. Por favor, genere uno nuevo");
+                break;
+              case -4:
+                setError("Código invalido");
+                break;
+              default:
+                setSuccess("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+                break;
+            }
+            break;
+          case 500:
+            setError("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+            break;
+          case 550:
+            setError("No se ha podido enviar el correo");
+            break;
+        }
       } else {
-        setError("El código debe tener 6 dígitos.")
+        if (navigator.onLine) {
+          setError("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+        }else{
+          setError("Verifique su conexion a internet");
+        }
       }
     } catch (err) {
-      setError("Error al verificar el código.")
+      setError("Error al verificar el código")
     } finally {
       setLoading(false)
     }
@@ -240,27 +288,63 @@ export default function MultiStepForm() {
 
   // Verify DNI
   const verifyDni = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
+    e.preventDefault();
+    setSuccess("");
+    if (formData.dni < 1000000 || formData.dni > 999999999) {
+      return;
+    }
+    setError("");
+    setLoading(true);
 
     try {
-      // Simulate API call to verify DNI
-      await new Promise((resolve) => setTimeout(resolve, 1500))
-
-      // In a real app, you would check if the DNI is already in use
-      // const response = await fetch('/api/verify-dni', {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ dni: formData.dni })
-      // });
-
-      // For demo purposes, we'll consider any DNI as valid
-      setDniVerified(true)
-      setStep(3)
-      setSuccess("DNI verificado correctamente.")
+      let rsp = await POST("registroclientes/verificarcodigo", { codigo: formData.dni });
+      if (rsp) {
+        switch (rsp.status) {
+          case 200:
+            setDniVerified(true)
+            setStep(3);
+            setSuccess("Correo verificado correctamente");
+            break;
+          case 401:
+            window.location.reload();
+            break;
+          case 409:
+            rsp = await rsp.json();
+            switch (rsp) {
+              case -1:
+                setError("No se ha podido procesar la solicitud");
+                break;
+              case -2:
+                setError("Se ha excedido el limite de intentos. Debe generar un correo nuevo");
+                break;
+              case -3:
+                setEmailSent(false);
+                setError("Su código de verificación expiró. Por favor, genere uno nuevo");
+                break;
+              case -4:
+                setError("Código invalido");
+                break;
+              default:
+                setSuccess("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+                break;
+            }
+            break;
+          case 500:
+            setError("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+            break;
+          case 550:
+            setError("No se ha podido enviar el correo");
+            break;
+        }
+      } else {
+        if (navigator.onLine) {
+          setError("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+        }else{
+          setError("Verifique su conexion a internet");
+        }
+      }
     } catch (err) {
-      setError("Error al verificar el DNI.")
+      setError("Error al verificar el DNI.");
     } finally {
       setLoading(false)
     }
@@ -372,7 +456,7 @@ export default function MultiStepForm() {
           className={validationErrors.dni ? "is-invalid" : ""}
         />
         {validationErrors.dni && <div className="invalid-feedback">{validationErrors.dni}</div>}
-        <Form.Text className="text-muted">Verificaremos si su DNI ya está registrado en nuestro sistema.</Form.Text>
+        <Form.Text className="text-muted">Vamos a verificar su numero de documento.</Form.Text>
       </Form.Group>
 
       <Button variant="primary" type="submit" disabled={loading}>
