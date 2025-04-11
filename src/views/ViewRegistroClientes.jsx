@@ -8,7 +8,7 @@ import CheckOnline from "../utils/CheckOnline";
 
 export default function ViewRegistroClientes() {
   const { empresa, idEmpresa, estiloBorde } = useEmpresa();
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -97,14 +97,14 @@ export default function ViewRegistroClientes() {
   };
 
   function handleChange(e) {
-    const { name, value } = e.target;
+    let { name, value } = e.target;
 
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
 
-    const error = validateField(name, value);
+    let error = validateField(name, value);
     if (error || validationErrors[name]) {
       setValidationErrors((prev) => ({
         ...prev,
@@ -159,9 +159,9 @@ export default function ViewRegistroClientes() {
   }
 
   const sendVerificationCode = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    if (!regex.email.test(formData.email)) {
+    if (!validators.email.regex.test(formData.email)) {
       setValidationErrors({
         ...validationErrors,
         email: "Ingrese un correo electrónico válido",
@@ -302,13 +302,13 @@ export default function ViewRegistroClientes() {
     e.preventDefault();
     setSuccess("");
     setError("");
-    if (regex.dni.test(formData.dni)) {
+    if (!validators.dni.regex.test(formData.dni)) {
       return;
     }
     setLoading(true);
 
     try {
-      let rsp = await POST("registroclientes/verificardni", { codigo: formData.dni });
+      let rsp = await POST("registroclientes/verificardni", { Dni: formData.dni });
       if (rsp) {
         switch (rsp.status) {
           case 200:
@@ -353,7 +353,7 @@ export default function ViewRegistroClientes() {
     setLoading(true);
     setError("");
     setSuccess("");
-
+    
     try {
       let rsp = await POST("registroclientes/completarregistro", {
         Nombre: formData.firstName,
@@ -367,6 +367,9 @@ export default function ViewRegistroClientes() {
         switch (rsp.status) {
           case 200:
             setSuccess("¡Registro completado con éxito! Para ingresar a la app por primera vez, utilice su DNI como usuario y contraseña");
+            setTimeout(() => {
+              window.location.href = `/${empresa}/login`;
+            }, 4000)
             break;
           case 400:
             setError("Verifique que los datos sean correctos");
@@ -374,8 +377,22 @@ export default function ViewRegistroClientes() {
           case 401:
             window.location.reload();
             break;
+          case 409:
+            rsp = await rsp.json();
+            switch (rsp) {
+              case -1:
+                setError("Su verificación ha expirado. Por la seguridad e integridad de sus datos, deberá iniciar el proceso nuevamente");
+                break;
+              case -2:
+                setError("Este correo o documento ya fue registrado por otra persona. Si creés que esto es un error, por favor acérquese a la sucursal más cercana.");
+                break;
+              case -3:
+                setSuccess("Ha ocurrido un problema. Por favor, intente repetir el proceso de registro. Si el problema persiste, contáctese con la sucursal más cercana");
+                break;
+            }
+            break;
           case 500:
-            setError("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+            setError("Ha ocurrido un problema. Si el problema persiste, contáctese con la sucursal más cercana");
             break;
           case 550:
             setError("No se ha podido enviar el correo");
@@ -549,9 +566,9 @@ export default function ViewRegistroClientes() {
                 <Form.Label>Género</Form.Label>
                 <Form.Select name="gender" value={formData.gender} onChange={handleChange} required>
                   <option value="">Seleccione su género</option>
-                  <option value="masculino">Masculino</option>
-                  <option value="femenino">Femenino</option>
-                  <option value="otro">Otro</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+                  <option value="Otro">Otro</option>
                 </Form.Select>
               </Form.Group>
 
@@ -563,7 +580,7 @@ export default function ViewRegistroClientes() {
                   value={formData.birthDate}
                   onChange={handleChange}
                   className={validationErrors.birthDate ? "is-invalid" : ""} required />
-                  {validationErrors.birthDate && <div className="invalid-feedback">{validationErrors.birthDate}</div>}
+                {validationErrors.birthDate && <div className="invalid-feedback">{validationErrors.birthDate}</div>}
               </Form.Group>
 
               <Form.Group className="mb-3">
