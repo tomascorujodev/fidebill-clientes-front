@@ -78,7 +78,7 @@ export default function ViewRegistroClientes() {
         let adjustedAge = (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) ? age - 1 : age;
 
         if (adjustedAge < 18) return "Debe tener al menos 18 años";
-        if (adjustedAge > 130) return "Edad inválida";
+        if (adjustedAge > 123) return "Edad inválida";
         return "";
       }
     }

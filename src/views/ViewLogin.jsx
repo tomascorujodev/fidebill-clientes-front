@@ -99,7 +99,7 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
           <div className="text-center mt-3">
             ¿No estás registrado?
             <br/>
-            <Link to="registro">
+            <Link to={`/${empresa}/registro`}>
             Creá tu cuenta
             </Link>
             <a href="#" className="text-decoration-none">

@@ -19,7 +19,7 @@ export default function CustomNavbar() {
         <Container fluid>
           <Navbar.Brand className="d-flex align-items-center">
             <FaUser className="me-2" />
-            <span className="fw-bold">{token ? "Hola" + " " + token.nombre + "!" : "Usuario no disponible"}</span>
+            <span>{token ? "Hola" + " " + token.nombre + "!" : "Usuario no disponible"}</span>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
