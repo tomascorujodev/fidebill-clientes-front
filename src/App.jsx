@@ -40,7 +40,7 @@ export default function App() {
       }
     }
     validateFunction();
-  }, [])
+  }, []);
 
   return (
     <>
@@ -72,7 +72,7 @@ export default function App() {
                     </>
                 }
               </Routes>
-              <ChangePasswordModal changePassword={changePassword} setChangePassword={setChangePassword} />
+              {/* <ChangePasswordModal changePassword={changePassword} setChangePassword={setChangePassword} /> */}
             </BrowserRouter>
 
           </>

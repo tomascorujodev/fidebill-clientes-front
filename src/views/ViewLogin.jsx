@@ -52,10 +52,9 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
 
       <img src={`/assets/${empresa}.png`} alt="..." style={{ width: "300px" }} />
       <img src="/assets/Socios.png" alt="..." style={{ width: "120px" }} />
-      <br />
 
-      <div className="card-rounded" style={{ maxWidth: "400px", width: "100%", borderColor: `${estiloBorde}`, boxShadow: `${estiloBorde} 0px 0rem 2rem` }}>
-        <div className="card-body p-5">
+      <div className="card-rounded" style={{ maxWidth: "400px", width: "85%", borderColor: `${estiloBorde}`, boxShadow: `${estiloBorde} 0px 0rem 2rem` }}>
+        <div className="card-body p-4">
           <h2 className="card-title text-center mb-4">Iniciar Sesión</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -98,8 +97,10 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
             }
           </form>
           <div className="text-center mt-3">
+            ¿No estás registrado?
+            <br/>
             <Link to="registro">
-              Registrate en Fidebill
+            Creá tu cuenta
             </Link>
             <a href="#" className="text-decoration-none">
             </a>

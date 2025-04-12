@@ -1,5 +1,5 @@
 import { useRef, useState } from "react"
-import { Button, Form, Card, Alert } from "react-bootstrap"
+import { Button, Form, Card, Alert, Modal } from "react-bootstrap"
 import React from "react"
 import { POST } from "../services/Fetch"
 import { useEmpresa } from "../Contexts/EmpresaContext";
@@ -14,6 +14,7 @@ export default function ViewRegistroClientes() {
   const [success, setSuccess] = useState("");
   const [emailSent, setEmailSent] = useState(false);
   const [emailVerified, setEmailVerified] = useState(false);
+  const [userVerified, setUserVerified] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
   const [timerActive, setTimerActive] = useState(false);
   const [formData, setFormData] = useState({
@@ -324,10 +325,13 @@ export default function ViewRegistroClientes() {
                 setError("Ha ocurrido un error");
                 break;
               case -2:
+                setError("Su verificación expiró. Por favor, inicie el proceso nuevamente");
+                break;
+              case -3:
                 setError("Este documento se encuentra registrado. Si considera que esto es un error, por favor, acérquese a la sucursal más cercana");
                 break;
               default:
-                setSuccess("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+                setError("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
                 break;
             }
             break;
@@ -353,7 +357,7 @@ export default function ViewRegistroClientes() {
     setLoading(true);
     setError("");
     setSuccess("");
-    
+
     try {
       let rsp = await POST("registroclientes/completarregistro", {
         Nombre: formData.firstName,
@@ -367,9 +371,7 @@ export default function ViewRegistroClientes() {
         switch (rsp.status) {
           case 200:
             setSuccess("¡Registro completado con éxito! Para ingresar a la app por primera vez, utilice su DNI como usuario y contraseña");
-            setTimeout(() => {
-              window.location.href = `/${empresa}/login`;
-            }, 4000)
+            setUserVerified(true);
             break;
           case 400:
             setError("Verifique que los datos sean correctos");
@@ -429,7 +431,7 @@ export default function ViewRegistroClientes() {
   )
 
   return (
-    <div className="container mt-5">
+    <div className="container mt-4 align-content-center">
       <Card className="shadow-sm">
         <Card.Header>
           <h2 className="text-center">Registro de usuario</h2>
@@ -618,6 +620,21 @@ export default function ViewRegistroClientes() {
           }
         </Card.Body>
       </Card>
+      { //registro completado con exito
+        <Modal style={{alignContent: "center"}} show={userVerified} >
+          <Modal.Header className="flex-column">
+            <Modal.Title>¡Registro completado!</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Alert style={{margin: "0px"}} variant="success">Para ingresar a la aplicación, utilice su DNI como usuario y contraseña</Alert>
+          </Modal.Body>
+          <Modal.Footer >
+            <div className="d-flex justify-content-center w-100">
+              <Button className="w-100" variant="primary" onClick={() => { window.location.href = `/${empresa}/login`; }}>Ingresar</Button>
+            </div>
+          </Modal.Footer>
+        </Modal>
+      }
     </div>
   )
 }
