@@ -24,7 +24,7 @@ export default function Movimientos() {
                     setTransacciones(result.compras);
                     break;
                 case 204:
-                    setMensaje("Parece que aún no tenes consumos🥺. En cuanto pases a aprovechar las promos que sumen puntos vas a poder ver reflejadas tus transacciones acá🥳")
+                    setMensaje("Parece que aún no tenes consumos 🥺. Empezá a sumar puntos y a canjearlos en tus compras para ver tus transacciones reflejadas en esta sección 🥳")
                     break;
                 case 401:
                     localStorage.clear();
