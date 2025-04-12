@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../assets/css/ViewLogin.css";
 import { POST } from "../services/Fetch";
 import { Link } from "react-router-dom";
-import { useEmpresa } from "../Contexts/EmpresaContext";
+import { useEmpresa } from "../contexts/EmpresaContext";
 
 export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
   const { empresa, idEmpresa, estiloBorde } = useEmpresa();

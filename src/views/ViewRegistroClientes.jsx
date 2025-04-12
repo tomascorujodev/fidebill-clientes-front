@@ -2,7 +2,7 @@ import { useRef, useState } from "react"
 import { Button, Form, Card, Alert, Modal } from "react-bootstrap"
 import React from "react"
 import { POST } from "../services/Fetch"
-import { useEmpresa } from "../Contexts/EmpresaContext";
+import { useEmpresa } from "../contexts/EmpresaContext";
 import "../assets/css/ViewRegistroClientes.css"
 import CheckOnline from "../utils/CheckOnline";
 

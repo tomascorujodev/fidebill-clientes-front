@@ -12,7 +12,7 @@ import { GET } from "./services/Fetch";
 import ChangePasswordModal from "./components/ChangePasswordModal";
 import { Spinner } from "react-bootstrap";
 import ViewRegistroClientes from "./views/ViewRegistroClientes";
-import { EmpresaProvider } from "./Contexts/EmpresaContext";
+import { EmpresaProvider } from "./contexts/EmpresaContext";
 
 export default function App() {
   const [isLogedIn, setIsLoggedIn] = useState(false);
