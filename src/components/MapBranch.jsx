@@ -47,7 +47,7 @@ export default function MapBranch() {
             <MapContainer
               center={mapCenter}
               zoom={mapZoom}
-              style={{ aspectRatio: "16 / 9" }}
+              style={{ aspectRatio: "16 / 9", zIndex: 1 }}
               zoomControl={false}
               attributionControl={false}
             >

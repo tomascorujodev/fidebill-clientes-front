@@ -3,7 +3,7 @@ import CardTransaction from "../components/CardTransaction";
 import { GET } from "../services/Fetch";
 import { ISOaLatino } from "../utils/ConvertirFechas";
 
-export default function Movimientos({ setIsLoggedIn }) {
+export default function Movimientos() {
     const [transacciones, setTransacciones] = useState(null);
     const [mensaje, setMensaje] = useState("");
 
