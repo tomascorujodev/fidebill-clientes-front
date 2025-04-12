@@ -3,6 +3,10 @@ import { GET } from "../services/Fetch";
 
 const LocalesContext = createContext();
 
+export function useLocales() {
+    return useContext(LocalesContext);
+}
+
 export function LocalesProvider({ children }) {
     const [locales, setLocales] = useState(null);
 
@@ -20,8 +24,4 @@ export function LocalesProvider({ children }) {
             {children}
         </LocalesContext.Provider>
     );
-}
-
-export function useLocales() {
-    return useContext(LocalesContext);
 }

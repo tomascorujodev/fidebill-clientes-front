@@ -1,296 +1,640 @@
-import { useState } from "react";
-import { POST } from "../services/Fetch";
-import { Modal, Button } from "react-bootstrap";
+import { useRef, useState } from "react"
+import { Button, Form, Card, Alert, Modal } from "react-bootstrap"
+import React from "react"
+import { POST } from "../services/Fetch"
+import { useEmpresa } from "../Contexts/EmpresaContext";
+import "../assets/css/ViewRegistroClientes.css"
+import CheckOnline from "../utils/CheckOnline";
 
 export default function ViewRegistroClientes() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { empresa, idEmpresa, estiloBorde } = useEmpresa();
+  const [step, setStep] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [emailSent, setEmailSent] = useState(false);
+  const [emailVerified, setEmailVerified] = useState(false);
+  const [userVerified, setUserVerified] = useState(false);
+  const [resendTimer, setResendTimer] = useState(60);
+  const [timerActive, setTimerActive] = useState(false);
   const [formData, setFormData] = useState({
-    Nombre: "",
-    Apellido: "",
-    Documento: "",
-    FechaNacimiento: "",
-    Genero: "Masculino",
-    Email: "",
-    Direccion: "",
-    Telefono: "",
-  });
-  const [errors, setErrors] = useState({});
-  const [showModal, setShowModal] = useState(false);
-  const [message, setMessage] = useState("");
-  const validaciones = {
-    Nombre: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/,
-    Apellido: /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/,
-    Documento: /^[0-9]{7,9}$/,
-    Genero: /^(Masculino|Femenino|Otro)$/i,
-    FechaNacimiento: /^\d{2,4}-\d{2}-\d{2,4}$/,
-    Email: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
-    Direccion: /^.{0}$|^.{5,100}$/,
-    Telefono: /^(\d{10})?$/,
+    email: "",
+    verificationCode: "",
+    dni: "",
+    firstName: "",
+    lastName: "",
+    gender: "",
+    birthDate: "",
+    phone: "",
+    address: "",
+  })
+  const [validationErrors, setValidationErrors] = useState({
+    email: "",
+    dni: "",
+    firstName: "",
+    lastName: "",
+    birthDate: "",
+    phone: "",
+    address: "",
+  })
+  const codeInputRefs = useRef([]);
+
+
+  const validators = {
+    email: {
+      regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+      message: "Ingrese un correo electrónico válido"
+    },
+    dni: {
+      regex: /^[1-9][0-9]{6,8}$/,
+      message: "Número de DNI inválido"
+    },
+    phone: {
+      regex: /^\d{9,15}$/,
+      message: "Ingrese un número de teléfono válido"
+    },
+    firstName: {
+      regex: /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]{2,50}$/,
+      message: "Ingrese un nombre válido"
+    },
+    lastName: {
+      regex: /^[A-Za-zÁÉÍÓÚáéíóúÑñÜü\s'-]{2,50}$/,
+      message: "Ingrese un apellido válido"
+    },
+    address: {
+      regex: /^(?=.*[A-Za-zÁÉÍÓÚáéíóúÑñ])(?=.*\d)[A-Za-zÁÉÍÓÚáéíóúÑñ0-9\s\.\-ºª,]{3,}$/,
+      message: "Ingrese una direccion válida"
+    },
+    birthDate: {
+      custom: (value) => {
+        if (!value) return "Ingrese su fecha de nacimiento";
+
+        let birth = new Date(value);
+        let today = new Date();
+        let age = today.getFullYear() - birth.getFullYear();
+        let monthDiff = today.getMonth() - birth.getMonth();
+        let dayDiff = today.getDate() - birth.getDate();
+
+        let adjustedAge = (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) ? age - 1 : age;
+
+        if (adjustedAge < 18) return "Debe tener al menos 18 años";
+        if (adjustedAge > 123) return "Edad inválida";
+        return "";
+      }
+    }
+  };
+
+  function validateField(name, value) {
+    let validator = validators[name];
+    if (validator) {
+      if (validator.regex) {
+        return validator.regex.test(value) ? "" : validator.message;
+      }
+      if (validator.custom) {
+        return validator.custom(value);
+      }
+    }
+    return "";
   };
 
   function handleChange(e) {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    let { name, value } = e.target;
 
-    if (validaciones[name].test(value)) {
-      setErrors({ ...errors, [name]: false });
-    } else {
-      setErrors({ ...errors, [name]: true });
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+
+    let error = validateField(name, value);
+    if (error || validationErrors[name]) {
+      setValidationErrors((prev) => ({
+        ...prev,
+        [name]: error,
+      }));
     }
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setIsLoading(true);
-    const newErrors = {};
-    let isValid = true;
 
-    Object.keys(formData).forEach((key) => {
-      if (!validaciones[key].test(formData[key])) {
-        newErrors[key] = true;
-        isValid = false;
-      }
-    });
+  function handleVerificationCodeChange(e, index) {
+    let value = e.target.value;
 
-    setErrors(newErrors);
-    if (isValid) {
-      try {
-        let response = await POST("clientes/crearcliente", {
-          ...formData,
-          FechaNacimiento: new Date(formData.FechaNacimiento).toISOString(),
-        });
-        if (response) {
-          switch (response.status) {
-            case 200:
-              setMessage(
-                "El cliente " +
-                  formData.Nombre +
-                  " " +
-                  formData.Apellido +
-                  ", Documento: " +
-                  formData.Documento +
-                  " ha sido cargado correctamente"
-              );
-              setFormData({
-                Nombre: "",
-                Apellido: "",
-                Documento: "",
-                FechaNacimiento: "",
-                Genero: "Masculino",
-                TipoCliente: "Consumidor Final",
-                Email: "",
-                Direccion: "",
-                Telefono: "",
-              });
-              setErrors({});
-              setShowModal(true);
-              break;
-            case 401:
-              setMessage(
-                "Su sesion expiro. Por favor, vuelva a iniciar sesion"
-              );
-              setShowModal(true);
-              break;
-            default:
-              response = await response.json();
-              setMessage(response.message);
-              setShowModal(true);
-              break;
-          }
-        } else {
-          if (navigator.onLine) {
-            setMessage(
-              "El servidor no responde. Por favor vuelva a intentarlo en unos minutos. Si el problema persiste contáctese con la sucursal más cercana"
-            );
-          } else {
-            setMessage(
-              "Hubo un problema al agregar cliente. Por favor, verifique la conexión y vuelva a intentarlo."
-            );
-          }
-          setShowModal(true);
+    if (value && !/^\d+$/.test(value)) {
+      return
+    }
+
+    const newVerificationCode = formData.verificationCode.split("")
+    newVerificationCode[index] = value
+
+    setFormData({
+      ...formData,
+      verificationCode: newVerificationCode.join(""),
+    })
+
+    if (value && index < 5) {
+      codeInputRefs.current[index + 1].focus()
+    }
+  }
+
+  function handleVerificationCodeKeyDown(e, index) {
+    if (e.key === "Backspace" && !formData.verificationCode[index] && index > 0) {
+      codeInputRefs.current[index - 1].focus()
+    }
+  }
+
+  const startResendTimer = () => {
+    setResendTimer(60)
+    setTimerActive(true)
+
+    const timer = setInterval(() => {
+      setResendTimer((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timer)
+          setTimerActive(false)
+          return 0
         }
-      } catch {
-        setMessage(
-          "Hubo un problema al agregar cliente. Por favor, contacte con un administrador."
-        );
-        setShowModal(true);
-        setIsLoading(false);
-      }
-    }
-    setIsLoading(false);
+        return prevTime - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
   }
+
+  const sendVerificationCode = async (e) => {
+    e.preventDefault();
+
+    if (!validators.email.regex.test(formData.email)) {
+      setValidationErrors({
+        ...validationErrors,
+        email: "Ingrese un correo electrónico válido",
+      })
+      return
+    }
+
+    setLoading(true)
+    setError("")
+
+    try {
+      setLoading(true);
+      setSuccess("");
+      setError("");
+      let rsp = await POST("registroclientes/verificarcorreo", { IdEmpresa: idEmpresa, Email: formData.email, reenvio: emailSent })
+      if (rsp) {
+        switch (rsp.status) {
+          case 200:
+            rsp = await rsp.json();
+            localStorage.setItem(empresa, rsp.token);
+            codeInputRefs.current = codeInputRefs.current.slice(0, 6);
+            setEmailSent(true);
+            setSuccess("Código de verificación enviado. Por favor revise su correo. Verifique también las carpetas de Spam, Correo no deseado o Promociones");
+            startResendTimer();
+            setTimeout(() => {
+              if (codeInputRefs.current[0]) {
+                codeInputRefs.current[0].focus()
+              }
+            }, 100);
+            break;
+          case 401:
+            window.location.reload();
+            break;
+          case 409:
+            rsp = await rsp.json();
+            switch (rsp.error) {
+              case -1:
+                setSuccess("");
+                setError("El correo ya esta en uso");
+                break;
+              case -2:
+                setSuccess("");
+                setError("Se ha excedido el limite de reenvios. Por favor, intente nuevamente mas tarde");
+                break;
+              case -3:
+                localStorage.setItem(empresa, rsp.token);
+                setSuccess("Este correo ya fue verificado");
+                setStep(2);
+                break;
+              case -4:
+                localStorage.setItem(empresa, rsp.token)
+                setEmailSent(true);
+                setSuccess("Ya tiene un código pendiente. Por favor revise su correo. Verifique también las carpetas de Spam, Correo no deseado o Promociones.");
+                break;
+            }
+            break;
+          case 500:
+            setError("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana.");
+            break;
+          case 550:
+            setError("Ha ocurrido un error con el envio de correo");
+            break;
+        }
+      } else {
+        setError(CheckOnline());
+      }
+
+
+    } catch (err) {
+      setSuccess("");
+      setError("Error al enviar el código de verificación")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  async function verifyEmailCode(e) {
+    e.preventDefault();
+    setSuccess("");
+    if (formData.verificationCode.length !== 6) {
+      setError("El código debe tener 6 dígitos.");
+      return;
+    }
+    setError("");
+    setLoading(true);
+
+    try {
+      let rsp = await POST("registroclientes/verificarcodigo", { codigo: formData.verificationCode });
+      if (rsp) {
+        switch (rsp.status) {
+          case 200:
+            setEmailVerified(true);
+            setStep(2);
+            setSuccess("Correo verificado correctamente");
+            break;
+          case 401:
+            window.location.reload();
+            break;
+          case 409:
+            rsp = await rsp.json();
+            switch (rsp) {
+              case -1:
+                setError("No se ha podido procesar la solicitud");
+                break;
+              case -2:
+                setError("Se ha excedido el limite de intentos. Debe generar un correo nuevo");
+                break;
+              case -3:
+                setEmailSent(false);
+                setError("Su código de verificación expiró. Por favor, genere uno nuevo");
+                break;
+              case -4:
+                setError("Código invalido");
+                break;
+              default:
+                setSuccess("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+                break;
+            }
+            break;
+          case 500:
+            setError("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+            break;
+          case 550:
+            setError("No se ha podido enviar el correo");
+            break;
+        }
+      } else {
+        setError(CheckOnline());
+      }
+    } catch (err) {
+      setError("Error al verificar el código")
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const verifyDni = async (e) => {
+    e.preventDefault();
+    setSuccess("");
+    setError("");
+    if (!validators.dni.regex.test(formData.dni)) {
+      return;
+    }
+    setLoading(true);
+
+    try {
+      let rsp = await POST("registroclientes/verificardni", { Dni: formData.dni });
+      if (rsp) {
+        switch (rsp.status) {
+          case 200:
+            setStep(3);
+            break;
+          case 401:
+            window.location.reload();
+            break;
+          case 409:
+            rsp = await rsp.json();
+            switch (rsp) {
+              case -1:
+                setError("Ha ocurrido un error");
+                break;
+              case -2:
+                setError("Su verificación expiró. Por favor, inicie el proceso nuevamente");
+                break;
+              case -3:
+                setError("Este documento se encuentra registrado. Si considera que esto es un error, por favor, acérquese a la sucursal más cercana");
+                break;
+              default:
+                setError("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+                break;
+            }
+            break;
+          case 500:
+            setError("Ha ocurrido un problema. Si el problema persiste contactese con la sucursal mas cercana");
+            break;
+          case 550:
+            setError("No se ha podido enviar el correo");
+            break;
+        }
+      } else {
+        setError(CheckOnline());
+      }
+    } catch (err) {
+      setError("Error al verificar el DNI.");
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const submitForm = async (e) => {
+    e.preventDefault()
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      let rsp = await POST("registroclientes/completarregistro", {
+        Nombre: formData.firstName,
+        Apellido: formData.lastName,
+        FechaNacimiento: formData.birthDate,
+        Genero: formData.gender,
+        Direccion: formData.address,
+        Telefono: formData.phone
+      })
+      if (rsp) {
+        switch (rsp.status) {
+          case 200:
+            setSuccess("¡Registro completado con éxito! Para ingresar a la app por primera vez, utilice su DNI como usuario y contraseña");
+            setUserVerified(true);
+            break;
+          case 400:
+            setError("Verifique que los datos sean correctos");
+            break;
+          case 401:
+            window.location.reload();
+            break;
+          case 409:
+            rsp = await rsp.json();
+            switch (rsp) {
+              case -1:
+                setError("Su verificación ha expirado. Por la seguridad e integridad de sus datos, deberá iniciar el proceso nuevamente");
+                break;
+              case -2:
+                setError("Este correo o documento ya fue registrado por otra persona. Si creés que esto es un error, por favor acérquese a la sucursal más cercana.");
+                break;
+              case -3:
+                setSuccess("Ha ocurrido un problema. Por favor, intente repetir el proceso de registro. Si el problema persiste, contáctese con la sucursal más cercana");
+                break;
+            }
+            break;
+          case 500:
+            setError("Ha ocurrido un problema. Si el problema persiste, contáctese con la sucursal más cercana");
+            break;
+          case 550:
+            setError("No se ha podido enviar el correo");
+            break;
+        }
+      } else {
+        setError(CheckOnline());
+      }
+    } catch (err) {
+      setError("Error al enviar el formulario.");
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // Render progress indicator
+  const renderProgress = () => (
+    <div className="progress-indicator mb-4">
+      <div className="d-flex justify-content-between">
+        <div className={`step-indicator ${step >= 1 ? "active" : ""}`}>
+          <div className="step-number">1</div>
+          <div className="step-title">Verificar correo</div>
+        </div>
+        <div className={`step-indicator ${step >= 2 ? "active" : ""}`}>
+          <div className="step-number">2</div>
+          <div className="step-title">Verificar DNI</div>
+        </div>
+        <div className={`step-indicator ${step >= 3 ? "active" : ""}`}>
+          <div className="step-number">3</div>
+          <div className="step-title">Datos personales</div>
+        </div>
+      </div>
+    </div>
+  )
 
   return (
-    <div className="container">
-      <div className="card-rounded">
-        <h2>Registrate</h2>
-        <br />
-        <form onSubmit={handleSubmit}>
-          <div className="mb-3">
-            <label htmlFor="Nombre" className="form-label">
-              Nombre(*)
-            </label>
-            <input
-              type="text"
-              className={`form-control ${errors.Nombre ? "is-invalid" : ""}`}
-              id="Nombre"
-              name="Nombre"
-              value={formData.Nombre}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="Apellido" className="form-label">
-              Apellido(*)
-            </label>
-            <input
-              type="text"
-              className={`form-control ${errors.Apellido ? "is-invalid" : ""}`}
-              id="Apellido"
-              name="Apellido"
-              value={formData.Apellido}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="Documento" className="form-label">
-              Documento(*)
-            </label>
-            <input
-              type="text"
-              className={`form-control ${errors.Documento ? "is-invalid" : ""}`}
-              id="Documento"
-              name="Documento"
-              value={formData.Documento}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="FechaNacimiento" className="form-label">
-              Fecha de Nacimiento(*)
-            </label>
-            <input
-              type="date"
-              className={`form-control ${
-                errors.FechaNacimiento ? "is-invalid" : ""
-              }`}
-              id="FechaNacimiento"
-              name="FechaNacimiento"
-              value={formData.FechaNacimiento}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="Genero" className="form-label">
-              Género(*)
-            </label>
-            <select
-              className={`form-select ${errors.Genero ? "is-invalid" : ""}`}
-              id="Genero"
-              name="Genero"
-              value={formData.Genero}
-              onChange={handleChange}
-            >
-              <option value="Masculino">Masculino</option>
-              <option value="Femenino">Femenino</option>
-              <option value="Otro">Otro</option>
-            </select>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="TipoCliente" className="form-label">
-              Tipo de cliente(*)
-            </label>
-            <select
-              className={`form-select ${
-                errors.TipoCliente ? "is-invalid" : ""
-              }`}
-              id="TipoCliente"
-              name="TipoCliente"
-              value={formData.TipoCliente}
-              onChange={handleChange}
-            >
-              <option value="Consumidor Final">Consumidor Final</option>
-              <option value="Responsable Inscripto">
-                Responsable Inscripto
-              </option>
-            </select>
-          </div>
-          <div className="mb-3">
-            <label htmlFor="Email" className="form-label">
-              Email(*)
-            </label>
-            <input
-              type="Email"
-              className={`form-control ${errors.Email ? "is-invalid" : ""}`}
-              id="Email"
-              name="Email"
-              value={formData.Email}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="Direccion" className="form-label">
-              Dirección
-            </label>
-            <input
-              type="text"
-              className={`form-control ${errors.Direccion ? "is-invalid" : ""}`}
-              id="Direccion"
-              name="Direccion"
-              value={formData.Direccion}
-              onChange={handleChange}
-            />
-          </div>
-          <div className="mb-3">
-            <label htmlFor="Telefono" className="form-label">
-              Teléfono
-            </label>
-            <input
-              type="tel"
-              className={`form-control ${errors.Telefono ? "is-invalid" : ""}`}
-              id="Telefono"
-              name="Telefono"
-              value={formData.Telefono}
-              onChange={handleChange}
-            />
-          </div>
-          {isLoading ? (
-            <div
-              style={{ justifySelf: "center" }}
-              className="d-flex spinner-border"
-              role="status"
-            >
-              <span className="visually-hidden">Cargando...</span>
-            </div>
-          ) : (
-            <>
-              <button
-                style={{ 
-                  marginTop: "0px", 
-                  marginBottom: "10px",
-                }}
-                type="submit"
-                className="btn btn-success w-25 mt-3 custom-button"
-              >
-                Agregar Cliente
-              </button>
-            </>
-          )}
-        </form>
-        <Modal show={showModal} onHide={() => setShowModal(false)}>
-          <Modal.Header closeButton>
-            <Modal.Title>Confirmación</Modal.Title>
+    <div className="container mt-4 align-content-center">
+      <Card className="shadow-sm">
+        <Card.Header>
+          <h2 className="text-center">Registro de usuario</h2>
+        </Card.Header>
+        <Card.Body>
+          {renderProgress()}
+
+          {error && <Alert variant="danger">{error}</Alert>}
+          {success && <Alert variant="success">{success}</Alert>}
+
+          {
+            step === 1 &&
+            <Form onSubmit={emailVerified ? null : emailSent ? verifyEmailCode : sendVerificationCode}>
+              <Form.Group className="mb-3">
+                <Form.Label>Correo electrónico</Form.Label>
+                <Form.Control
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  disabled={emailSent}
+                  required
+                  placeholder="Ingrese su correo electrónico"
+                  className={validationErrors.email ? "is-invalid" : ""}
+                />
+                {validationErrors.email && <div className="invalid-feedback">{validationErrors.email}</div>}
+              </Form.Group>
+
+              {emailSent && (
+                <>
+                  <Form.Group className="mb-3">
+                    <Form.Label>Código de verificación</Form.Label>
+                    <div className="verification-code-container">
+                      {[0, 1, 2, 3, 4, 5].map((index) => (
+                        <input
+                          key={index}
+                          type="text"
+                          maxLength={1}
+                          className="verification-code-input"
+                          value={formData.verificationCode[index] || ""}
+                          onChange={(e) => handleVerificationCodeChange(e, index)}
+                          onKeyDown={(e) => handleVerificationCodeKeyDown(e, index)}
+                          ref={(el) => (codeInputRefs.current[index] = el)}
+                        />
+                      ))}
+                    </div>
+                    <Form.Text className="text-muted">Ingrese el código de 6 dígitos enviado a su correo.</Form.Text>
+                  </Form.Group>
+
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <Button
+                      variant="outline-secondary"
+                      size="sm"
+                      onClick={sendVerificationCode}
+                      disabled={loading || timerActive}
+                      className="resend-button"
+                    >
+                      {timerActive ? `Reenviar código (${resendTimer}s)` : "Reenviar código"}
+                    </Button>
+
+                    <Button variant="primary" type="submit" disabled={loading || formData.verificationCode.length !== 6}>
+                      {loading ? "Procesando..." : "Verificar código"}
+                    </Button>
+                  </div>
+                </>
+              )}
+
+              {!emailSent && (
+                <Button variant="primary" type="submit" disabled={loading}>
+                  {loading ? "Procesando..." : "Enviar código"}
+                </Button>
+              )}
+            </Form>
+          }
+          {
+            step === 2 &&
+            <Form onSubmit={verifyDni}>
+              <Form.Group className="mb-3">
+                <Form.Label>DNI</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="dni"
+                  value={formData.dni}
+                  onChange={handleChange}
+                  required
+                  placeholder="Ingrese su DNI"
+                  className={validationErrors.dni ? "is-invalid" : ""}
+                />
+                {validationErrors.dni && <div className="invalid-feedback">{validationErrors.dni}</div>}
+                <Form.Text className="text-muted">Vamos a verificar su numero de documento.</Form.Text>
+              </Form.Group>
+
+              <Button variant="primary" type="submit" disabled={loading}>
+                {loading ? "Verificando..." : "Verificar DNI"}
+              </Button>
+            </Form>
+          }
+          {
+            step === 3 && <Form onSubmit={submitForm}>
+              <div className="row">
+                <div className="col-md-6">
+                  <Form.Group className="mb-3">
+                    <Form.Label>Nombre</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="firstName"
+                      value={formData.firstName}
+                      onChange={handleChange}
+                      required
+                      placeholder="Ingrese su nombre"
+                      className={validationErrors.firstName ? "is-invalid" : ""}
+                    />
+                    {validationErrors.firstName && <div className="invalid-feedback">{validationErrors.firstName}</div>}
+                  </Form.Group>
+                </div>
+                <div className="col-md-6">
+                  <Form.Group className="mb-3">
+                    <Form.Label>Apellido</Form.Label>
+                    <Form.Control
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      required
+                      placeholder="Ingrese su apellido"
+                      className={validationErrors.lastName ? "is-invalid" : ""}
+                    />
+                    {validationErrors.lastName && <div className="invalid-feedback">{validationErrors.lastName}</div>}
+                  </Form.Group>
+                </div>
+              </div>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Género</Form.Label>
+                <Form.Select name="gender" value={formData.gender} onChange={handleChange} required>
+                  <option value="">Seleccione su género</option>
+                  <option value="Masculino">Masculino</option>
+                  <option value="Femenino">Femenino</option>
+                  <option value="Otro">Otro</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Fecha de nacimiento</Form.Label>
+                <Form.Control
+                  type="date"
+                  name="birthDate"
+                  value={formData.birthDate}
+                  onChange={handleChange}
+                  className={validationErrors.birthDate ? "is-invalid" : ""} required />
+                {validationErrors.birthDate && <div className="invalid-feedback">{validationErrors.birthDate}</div>}
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Teléfono</Form.Label>
+                <Form.Control
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  placeholder="Ingrese su número de teléfono"
+                  className={validationErrors.phone ? "is-invalid" : ""}
+                />
+                {validationErrors.phone && <div className="invalid-feedback">{validationErrors.phone}</div>}
+              </Form.Group>
+
+              <Form.Group className="mb-3">
+                <Form.Label>Dirección</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleChange}
+                  required
+                  placeholder="Ingrese su dirección completa"
+                  className={validationErrors.address ? "is-invalid" : ""}
+                />
+                {validationErrors.address && <div className="invalid-feedback">{validationErrors.address}</div>}
+              </Form.Group>
+
+              <Button variant="primary" type="submit" disabled={loading}>
+                {loading ? "Enviando..." : "Completar registro"}
+              </Button>
+            </Form>
+          }
+        </Card.Body>
+      </Card>
+      { //registro completado con exito
+        <Modal style={{alignContent: "center"}} show={userVerified} >
+          <Modal.Header className="flex-column">
+            <Modal.Title>¡Registro completado!</Modal.Title>
           </Modal.Header>
-          <Modal.Body>{message}</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={() => setShowModal(false)}>
-              Cerrar
-            </Button>
+          <Modal.Body>
+            <Alert style={{margin: "0px"}} variant="success">Para ingresar a la aplicación, utilice su DNI como usuario y contraseña</Alert>
+          </Modal.Body>
+          <Modal.Footer >
+            <div className="d-flex justify-content-center w-100">
+              <Button className="w-100" variant="primary" onClick={() => { window.location.href = `/${empresa}/login`; }}>Ingresar</Button>
+            </div>
           </Modal.Footer>
         </Modal>
-        <br />
-      </div>
-      <br />
+      }
     </div>
-  );
+  )
 }

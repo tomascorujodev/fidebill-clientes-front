@@ -13,7 +13,7 @@ export default function MobileNavbar() {
   return (
     <>
       <div style={{height: "100px"}}></div>
-      <nav className={"rounded-mobile-navbar"} style={{ position: "fixed", borderColor: `${token.colorPrincipal}`,bottom: 0, width: "100%", maxWidth: "650px", zIndex: 1050 }}>
+      <nav className={"rounded-mobile-navbar"} style={{ position: "fixed", borderColor: `${token?.colorPrincipal}`,bottom: 0, width: "100%", maxWidth: "650px", zIndex: 1050 }}>
         <div className="container d-flex justify-content-around py-2">
           <Link className="nav-link text-center flex-grow-1" to={`/${empresa}/menu`}>
             <i className="bi bi-house"></i>

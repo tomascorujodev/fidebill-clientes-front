@@ -1,40 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "../assets/css/ViewLogin.css";
-import { GET, POST } from "../services/Fetch";
-import { useNavigate, useParams } from "react-router-dom";
+import { POST } from "../services/Fetch";
+import { Link } from "react-router-dom";
+import { useEmpresa } from "../Contexts/EmpresaContext";
 
 export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
-  const { empresa } = useParams();
+  const { empresa, idEmpresa, estiloBorde } = useEmpresa();
   const [documento, setDocumento] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [mensaje, setMensaje] = useState("");
-  const [estiloBorde, setEstiloBorde] = useState("");
-  const [idEmpresa, setIdEmpresa] = useState("");
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    async function checkEmpresa() {
-      let rsp = await GET("authclientes/checkempresa", { empresa: empresa });
-      switch (rsp?.status) {
-        case 200:
-          rsp = await rsp.json();
-          setEstiloBorde(rsp.response.colorPrincipal);
-          setIdEmpresa(rsp.response.idEmpresa);
-          return;
-        case 404:
-          navigate("/404");
-          return;
-        case 500:
-          navigate("/500");
-          return;
-        default:
-          navigate("/500");
-          return;
-      }
-    }
-    checkEmpresa();
-  }, [])
+  
   async function handleSubmit(e) {
     e.preventDefault();
     setIsLoading(true);
@@ -76,10 +52,9 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
 
       <img src={`/assets/${empresa}.png`} alt="..." style={{ width: "300px" }} />
       <img src="/assets/Socios.png" alt="..." style={{ width: "120px" }} />
-      <br />
 
-      <div className="card-rounded" style={{ maxWidth: "400px", width: "100%", borderColor: `${estiloBorde}`, boxShadow: `${estiloBorde} 0px 0rem 2rem` }}>
-        <div className="card-body p-5">
+      <div className="card-rounded" style={{ maxWidth: "400px", width: "85%", borderColor: `${estiloBorde}`, boxShadow: `${estiloBorde} 0px 0rem 2rem` }}>
+        <div className="card-body p-4">
           <h2 className="card-title text-center mb-4">Iniciar Sesión</h2>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -122,8 +97,12 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
             }
           </form>
           <div className="text-center mt-3">
+            ¿No estás registrado?
+            <br/>
+            <Link to={`/${empresa}/registro`}>
+            Creá tu cuenta
+            </Link>
             <a href="#" className="text-decoration-none">
-              Registrate en Fidebill
             </a>
           </div>
         </div>
