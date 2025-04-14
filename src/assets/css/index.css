@@ -1,22 +1,25 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@700&family=Montserrat:wght@700&family=Poppins:wght@700&family=Quicksand:wght@300..700&display=swap');
+
 .carousel-container {
     display: flex;
-    justify-content: center; /* Centra horizontalmente */
-    align-items: center; /* Centra verticalmente */
-    height: 100vh; /* Ocupar toda la altura de la pantalla */
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 body{
     max-width: 650px;
-    margin: 0 auto; /* Centrar horizontalmente */
+    margin: 0 auto;
     padding: 0;
     height: 100vh;
+    font-family: "Poppins", sans-serif !important;
 }
 
 #root{
     max-width: 650px;
     min-height: 100vh;
     height: 100%;
-    margin: 0 auto; /* Centrar horizontalmente */
+    margin: 0 auto;
     padding: 0;
     position: relative;
     font-family: "Poppins", sans-serif !important;

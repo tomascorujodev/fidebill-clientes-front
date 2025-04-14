@@ -9,7 +9,6 @@ export default function Carousel() {
       let result = await GET("vistaclientes/getcarrousel");
       if (result?.status === 200) {
         result = await result.json();
-        console.log(result);
         setUrlImagenes(result);
       }
     }

@@ -16,6 +16,7 @@ export default function ViewRegistroClientes() {
   const [emailVerified, setEmailVerified] = useState(false);
   const [userVerified, setUserVerified] = useState(false);
   const [resendTimer, setResendTimer] = useState(60);
+  const [cooldownTimer, setCooldownTimer] = useState(5);
   const [timerActive, setTimerActive] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -141,15 +142,33 @@ export default function ViewRegistroClientes() {
     }
   }
 
-  const startResendTimer = () => {
+  function startResendTimer(){
     setResendTimer(60)
     setTimerActive(true)
 
     const timer = setInterval(() => {
       setResendTimer((prevTime) => {
         if (prevTime <= 1) {
-          clearInterval(timer)
-          setTimerActive(false)
+          clearInterval(timer);
+          setTimerActive(false);
+          return 0
+        }
+        return prevTime - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(timer)
+  }
+
+  function startCooldownTimer(){
+    cooldownTimer(5)
+    setTimerActive(true)
+
+    const timer = setInterval(() => {
+      setCooldownTimer((prevTime) => {
+        if (prevTime <= 1) {
+          clearInterval(timer);
+          setTimerActive(false);
           return 0
         }
         return prevTime - 1
@@ -371,6 +390,7 @@ export default function ViewRegistroClientes() {
         switch (rsp.status) {
           case 200:
             setSuccess("¡Registro completado con éxito! Para ingresar a la app por primera vez, utilice su DNI como usuario y contraseña");
+            startCooldownTimer();
             setUserVerified(true);
             break;
           case 400:
@@ -630,7 +650,7 @@ export default function ViewRegistroClientes() {
           </Modal.Body>
           <Modal.Footer >
             <div className="d-flex justify-content-center w-100">
-              <Button className="w-100" variant="primary" onClick={() => { window.location.href = `/${empresa}/login`; }}>Ingresar</Button>
+              <Button className="w-100" variant="primary" onClick={() => { window.location.href = `/${empresa}/login`; }}>{timerActive ? `Ingresar (${resendTimer}s)` : "Ingresar"}</Button>
             </div>
           </Modal.Footer>
         </Modal>
