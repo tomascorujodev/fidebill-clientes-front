@@ -57,7 +57,7 @@ export default function App() {
                 {
                   isLogedIn ?
                     <Route element={<ClientsOffice />}>
-                      <Route path="/:empresa/*" element={<Menu />} />
+                      <Route path="/:empresa/*" element={<EmpresaProvider><Menu /></EmpresaProvider>} />
                       <Route path="/:empresa/sucursales" element={<Sucursales />} />
                       <Route path="/:empresa/beneficios" element={<Beneficios />} />
                       <Route path="/:empresa/movimientos" element={<Movimientos />} />

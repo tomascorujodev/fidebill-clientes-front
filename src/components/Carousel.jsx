@@ -17,7 +17,7 @@ export default function Carousel() {
 
 
   return (
-    <div style={{ aspectRatio: "4 / 1" }} className="w-full max-w-3xl mx-auto p-0 mt-0">
+    <div style={{ aspectRatio: "2 / 1" }} className="w-full max-w-3xl mx-auto p-0 mt-0">
       <div id="carouselExampleFade" className=" h-100 w-100 carousel slide carousel-fade">
         <div className="carousel-inner h-100 w-100">
           {

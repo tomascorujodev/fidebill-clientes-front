@@ -11,6 +11,7 @@ export function EmpresaProvider({ children }) {
     const empresa = window.location.pathname.slice(1).split('/')[0];
     const [estiloBorde, setEstiloBorde] = useState("");
     const [idEmpresa, setIdEmpresa] = useState("");
+    const [nombreEmpresa, setNombreEmpresa] = useState("");
     
     useEffect(() => {
         const obtenerEmpresa = async () => {
@@ -21,6 +22,7 @@ export function EmpresaProvider({ children }) {
                         result = await result.json();
                         setEstiloBorde(result.response.colorPrincipal);
                         setIdEmpresa(result.response.idEmpresa);
+                        setNombreEmpresa(result.response.nombreEmpresa);
                         return;
                     case 404:
                         window.location.replace("/404");
@@ -39,7 +41,7 @@ export function EmpresaProvider({ children }) {
     }, []);
 
     return (
-        <EmpresaContext.Provider value={{ empresa, estiloBorde, idEmpresa }}>
+        <EmpresaContext.Provider value={{ empresa, estiloBorde, idEmpresa, nombreEmpresa }}>
             {children}
         </EmpresaContext.Provider>
     );
