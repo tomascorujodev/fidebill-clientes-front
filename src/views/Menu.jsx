@@ -1,14 +1,17 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import Carousel from '../components/Carousel'
 import MapBranch from '../components/MapBranch'
 import { urlBase64ToUint8Array } from '../utils/vapidConverter';
 import { GET, POST } from '../services/Fetch';
 import { useEmpresa } from '../contexts/EmpresaContext';
+import { Button, Modal } from 'react-bootstrap';
 
 export default function Menu() {
   const { empresa, idEmpresa, estiloBorde, nombreEmpresa } = useEmpresa();
+  const [suscripcion, setSuscripcion] = useState(null);
+  const [showModal, setShowModal] = useState(false);
   useEffect(() => {
-    if(!nombreEmpresa) return
+    if (!nombreEmpresa) return
     setTimeout(() => {
       try {
         if (!('Notification' in window) || !('serviceWorker' in navigator) || !('PushManager' in window)) return;
@@ -28,10 +31,8 @@ export default function Menu() {
           }
           let response = await GET('notificaciones/verificarsuscripcion', { Endpoint: subscription?.endpoint });
           if (response?.status === 204) {
-            let confirmacion = confirm(`¿Te gustaría estar al tanto de los últimos beneficios de ${nombreEmpresa}?`);
-            if (confirmacion) {
-              POST('notificaciones/suscribirse', subscription)
-            }
+            setSuscripcion(subscription);
+            setShowModal(true);
           }
         })()
       } catch { }
@@ -43,6 +44,17 @@ export default function Menu() {
       <MapBranch />
       <br />
       <Carousel />
+      <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Notificaciones</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>¿Te gustaría estar al tanto de los últimos beneficios de <b>{nombreEmpresa}</b>?</Modal.Body>
+        <Modal.Footer>
+          <>
+            <Button variant="success" onClick={() => {POST('notificaciones/suscribirse', suscripcion); setShowModal(false)}}>Confirmar</Button>
+          </>
+        </Modal.Footer>
+      </Modal>
     </>
   )
 }
