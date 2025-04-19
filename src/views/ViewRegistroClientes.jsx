@@ -161,7 +161,7 @@ export default function ViewRegistroClientes() {
   }
 
   function startCooldownTimer(){
-    cooldownTimer(5)
+    setCooldownTimer(5);
     setTimerActive(true)
 
     const timer = setInterval(() => {
@@ -646,11 +646,11 @@ export default function ViewRegistroClientes() {
             <Modal.Title>¡Registro completado!</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Alert style={{margin: "0px"}} variant="success">Para ingresar a la aplicación, utilice su DNI como usuario y contraseña</Alert>
+            <Alert style={{margin: "0px"}} variant="warning">Para ingresar a la aplicación, utilice su DNI como usuario y contraseña</Alert>
           </Modal.Body>
           <Modal.Footer >
             <div className="d-flex justify-content-center w-100">
-              <Button className="w-100" variant="primary" onClick={() => { window.location.href = `/${empresa}/login`; }}>{timerActive ? `Ingresar (${resendTimer}s)` : "Ingresar"}</Button>
+              <Button className="w-100" variant="primary" disabled={loading || timerActive} onClick={() => { window.location.href = `/${empresa}/login`; }}>{cooldownTimer ? `Ingresar (${cooldownTimer}s)` : "Ingresar"}</Button>
             </div>
           </Modal.Footer>
         </Modal>

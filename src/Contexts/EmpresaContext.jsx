@@ -12,10 +12,10 @@ export function EmpresaProvider({ children }) {
     const [estiloBorde, setEstiloBorde] = useState("");
     const [idEmpresa, setIdEmpresa] = useState("");
     const [nombreEmpresa, setNombreEmpresa] = useState("");
-    
+
     useEffect(() => {
         const obtenerEmpresa = async () => {
-            let result = await GET("authclientes/checkempresa", {empresa: empresa});
+            let result = await GET("authclientes/checkempresa", { empresa: empresa });
             if (result) {
                 switch (result.status) {
                     case 200:
@@ -23,6 +23,7 @@ export function EmpresaProvider({ children }) {
                         setEstiloBorde(result.response.colorPrincipal);
                         setIdEmpresa(result.response.idEmpresa);
                         setNombreEmpresa(result.response.nombreEmpresa);
+
                         return;
                     case 404:
                         window.location.replace("/404");
@@ -42,7 +43,10 @@ export function EmpresaProvider({ children }) {
 
     return (
         <EmpresaContext.Provider value={{ empresa, estiloBorde, idEmpresa, nombreEmpresa }}>
-            {children}
+            {
+                nombreEmpresa &&
+                 children 
+            }
         </EmpresaContext.Provider>
     );
 }
