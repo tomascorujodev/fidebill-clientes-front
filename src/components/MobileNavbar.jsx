@@ -27,10 +27,10 @@ export default function MobileNavbar() {
             <i className="bi bi-ticket-perforated"></i>
             <div className="small">Beneficios</div>
           </Link>
-          <Link className="nav-link text-center" to={`/${empresa}/mas`}>
+          {/* <Link className="nav-link text-center" to={`/${empresa}/mas`}>
           <i className="bi bi-plus"></i>
           <div className="small">Más</div>
-        </Link>
+        </Link> */}
         </div>
       </nav>
     </>
