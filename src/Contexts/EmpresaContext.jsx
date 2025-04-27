@@ -12,40 +12,38 @@ export function EmpresaProvider({ children }) {
     const [estiloBorde, setEstiloBorde] = useState("");
     const [idEmpresa, setIdEmpresa] = useState("");
     const [nombreEmpresa, setNombreEmpresa] = useState("");
+    const [statusCode, setStatusCode] = useState(null);
 
     useEffect(() => {
         const obtenerEmpresa = async () => {
+            if (!empresa) {
+                setStatusCode(404);
+                return
+            }
             let result = await GET("authclientes/checkempresa", { empresa: empresa });
             if (result) {
-                switch (result.status) {
+                setStatusCode(result?.status);
+                switch (result?.status) {
                     case 200:
                         result = await result.json();
                         setEstiloBorde(result.response.colorPrincipal);
                         setIdEmpresa(result.response.idEmpresa);
                         setNombreEmpresa(result.response.nombreEmpresa);
-
-                        return;
-                    case 404:
-                        window.location.replace("/404");
-                        return;
-                    case 500:
-                        window.location.replace("/500");
                         return;
                     default:
-                        window.location.replace("/500");
                         return;
-
                 }
+            } else {
+                setStatusCode(500);
             }
         };
         obtenerEmpresa();
     }, []);
 
     return (
-        <EmpresaContext.Provider value={{ empresa, estiloBorde, idEmpresa, nombreEmpresa }}>
+        <EmpresaContext.Provider value={{ empresa, estiloBorde, idEmpresa, nombreEmpresa, statusCode }}>
             {
-                nombreEmpresa &&
-                 children 
+                children
             }
         </EmpresaContext.Provider>
     );

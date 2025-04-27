@@ -2,18 +2,15 @@ import CardBranch from "../components/CardBranch";
 import { useLocales } from "../contexts/LocalesContext";
 
 export default function Sucursales() {
-    const locales = useLocales();
+    let locales = useLocales();
     return (
         <>
         <div style={{ 
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(18rem, 1fr))", 
-            gap: "20px",
-            width: "100%", 
-            maxWidth: "600px",
-            margin: "0 auto",
-            justifyContent: "center",
-            justifyItems: "center"
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-around",
+            width: "96%", 
+            marginInline: "2%"
         }}>
         {
             locales &&

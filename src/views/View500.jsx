@@ -1,5 +1,5 @@
 import { Container, Card } from "react-bootstrap";
-import error from "/assets/error.png"
+import error from "/assets/sys/error.png"
 
 export default function View500(){
   return (

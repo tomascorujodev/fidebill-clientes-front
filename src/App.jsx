@@ -12,64 +12,85 @@ import { GET } from "./services/Fetch";
 import ChangePasswordModal from "./components/ChangePasswordModal";
 import { Spinner } from "react-bootstrap";
 import ViewRegistroClientes from "./views/ViewRegistroClientes";
-import { EmpresaProvider } from "./contexts/EmpresaContext";
+import { useEmpresa } from "./contexts/EmpresaContext";
 
 export default function App() {
-  const [isLogedIn, setIsLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [changePassword, setChangePassword] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [routes, setRoutes] = useState(false);
+  const { empresa, statusCode } = useEmpresa();
 
   useEffect(() => {
-    async function validateFunction() {
-      try {
-        let empresa = window.location.pathname.slice(1).split('/')[0];
-        let token = localStorage.getItem(empresa);
-        if (!token) {
-          setIsLoggedIn(false);
-          setIsLoading(false);
-          return;
-        }
-        let response = await GET("authclientes/validatetoken");
-        if (response?.ok) {
-          setIsLoggedIn(true);
-        } else {
-          localStorage.removeItem(empresa);
-        }
-      } catch { } finally {
-        setIsLoading(false);
+    async function loadPage() {
+      if (statusCode === null) {
+        setIsLoading(true);
+        return
       }
+
+      if (statusCode === 200) {
+        try {
+          let token = localStorage.getItem(empresa);
+          if (!token) {
+            setIsLoggedIn(false);
+          } else {
+            let response = await GET("authclientes/validatetoken");
+            if (response?.ok) {
+              setIsLoggedIn(true);
+            } else {
+              localStorage.removeItem(empresa);
+            }
+          }
+        } catch { }
+      }
+
+      setRoutes(returnView());
+      setIsLoading(false);
     }
-    validateFunction();
-  }, []);
+    loadPage()
+  }, [statusCode, isLoggedIn]);
+
+  function returnView() {
+    switch (statusCode) {
+      case 200:
+        return (
+          isLoggedIn ?
+            <Route element={<ClientsOffice />}>
+              <Route path="/:empresa/*" element={<Menu />} />
+              <Route path="/:empresa/sucursales" element={<Sucursales />} />
+              <Route path="/:empresa/beneficios" element={<Beneficios />} />
+              <Route path="/:empresa/movimientos" element={<Movimientos />} />
+            </Route>
+            :
+            <>
+              <Route path="*" element={<View404 />} />
+              <Route path="/404" element={<View404 />} />
+              <Route path="/:empresa/*" element={<ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn} />} />
+              <Route path="/:empresa/registro" element={<ViewRegistroClientes />} />
+              <Route path="/500" element={<View500 />} />
+            </>)
+      case 400:
+        return <Route path="*" element={<View404 />} />
+      case 404:
+        return <Route path="*" element={<View404 />} />
+      case 500:
+        return <Route path="*" element={<View500 />} />
+    }
+  }
 
   return (
     <>
       {
-        isLoading ?
+        isLoading || !routes ?
           <div className="d-flex justify-content-center align-items-center vh-100">
             <Spinner animation="border" variant="primary" />
           </div>
           :
           <>
-
             <BrowserRouter>
               <Routes>
                 {
-                  isLogedIn ?
-                    <Route element={<ClientsOffice />}>
-                      <Route path="/:empresa/*" element={<EmpresaProvider><Menu /></EmpresaProvider>} />
-                      <Route path="/:empresa/sucursales" element={<Sucursales />} />
-                      <Route path="/:empresa/beneficios" element={<Beneficios />} />
-                      <Route path="/:empresa/movimientos" element={<Movimientos />} />
-                    </Route>
-                    :
-                    <>
-                      <Route path="*" element={<View404 />} />
-                      <Route path="/404" element={<View404 />} />
-                      <Route path="/:empresa/*" element={<EmpresaProvider><ViewLogin setChangePassword={setChangePassword} setIsLoggedIn={setIsLoggedIn} /></EmpresaProvider>} />
-                      <Route path="/:empresa/registro" element={<EmpresaProvider><ViewRegistroClientes /></EmpresaProvider>} />
-                      <Route path="/500" element={<View500 />} />
-                    </>
+                  routes
                 }
               </Routes>
               {/* <ChangePasswordModal changePassword={changePassword} setChangePassword={setChangePassword} /> */}
