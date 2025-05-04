@@ -12,7 +12,7 @@ export default function CardBranch({ titulo, puntos, idUsuarioEmpresa }) {
           src={`/assets/${empresa}.png`}
           style={{ height: "55%", objectFit: "contain" }}
           className="card-img-top fixed"
-          alt="..."
+          alt="logo empresa"
         />
         <div style={{ height: "45%", padding: "4%" }} className="card-body text-center d-flex flex-column justify-content-end">
           <p style={{

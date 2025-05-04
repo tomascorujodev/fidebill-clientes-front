@@ -24,13 +24,13 @@ export default function Carousel() {
             urlImagenes &&
               <>
                 <div className="carousel-item active h-100 w-100">
-                  <img src={urlImagenes?.imagen1} className="d-block w-100 h-100 object-cover" alt="..." />
+                  <img src={urlImagenes?.imagen1} className="d-block w-100 h-100 object-cover" alt="imagen carrousel 1"/>
                 </div>
                 <div className="carousel-item w-100 h-100">
-                  <img src={urlImagenes?.imagen2} className="d-block w-100 h-100 object-cover" alt="..." />
+                  <img src={urlImagenes?.imagen2} className="d-block w-100 h-100 object-cover" alt="imagen carrousel 2" />
                 </div>
                 <div className="carousel-item w-100 h-100">
-                  <img src={urlImagenes?.imagen3} className="d-block w-100 h-100 object-cover" alt="..." />
+                  <img src={urlImagenes?.imagen3} className="d-block w-100 h-100 object-cover" alt="imagen carrousel 3" />
                 </div>
               </>
           }

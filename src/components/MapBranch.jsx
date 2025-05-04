@@ -15,13 +15,14 @@ export default function MapBranch() {
     html: `
       <div style="width: 70px; height: 70px; position: relative;">
         <svg viewBox="0 0 16 16" width="70" height="70" xmlns="http://www.w3.org/2000/svg">
-          <path d="M8 0a6 6 0 0 1 6 6c0 4.418-6 10-6 10S2 10.418 2 6a6 6 0 0 1 6-6z" fill="red"/>
+          <path d="M8 0a6 6 0 0 1 6 6c0 4.418-6 10-6 10S2 10.418 2 6a6 6 0 0 1 6-6z" fill="${estiloBorde}"/>
           <circle cx="8" cy="6" r="5" fill="white"/>
         </svg>
         <div style="position: absolute; top: 4.375px; left: 13.125px; width: 43.75px; height: 43.75px; border-radius: 50%;">
           <img 
             src="/assets/${empresa}.png"
             style="width: 100%; height: 100%; object-fit: contain; object-position: center; border-radius: 50%;"
+            alt="flecha de ubicación en el mapa"
           />
         </div>
       </div>
@@ -62,7 +63,7 @@ export default function MapBranch() {
             >
               <TileLayer url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png" />
               {locales &&
-                locales.map((sucursal) => (
+                locales?.map((sucursal) => (
                   (sucursal.geoLat && sucursal.geoLong) &&
                   <Marker key={sucursal.idUsuarioEmpresa} position={[sucursal.geoLat, sucursal.geoLong]} icon={customIcon}>
                     <Popup>
@@ -70,7 +71,7 @@ export default function MapBranch() {
                         <h3 className="font-bold mb-2">{sucursal.direccionLocal}</h3>
                         <img
                           src={`/assets/${empresa}.png`}
-                          alt={sucursal.direccionLocal}
+                          alt="logo empresa"
                           style={{ width: "100px", height: "50px"}}
                           className="rounded-md mb-2"
                         />

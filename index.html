@@ -6,13 +6,15 @@
   <!-- META BÁSICOS -->
   <meta charset="utf-8">
   <meta name="author" content="Fidebill">
-  <meta name="description" content="Acumulá puntos con tus compras y canjealos por beneficios exclusivos en empresas adheridas a Fidebill.">
+  <meta name="description"
+    content="Acumulá puntos con tus compras y canjealos por beneficios exclusivos en empresas adheridas a Fidebill.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="language" content="es">
 
   <!-- META GENERALES -->
   <meta property="og:title" content="Fidebill" />
-  <meta property="og:description" content="Acumulá puntos y canjealos por beneficios exclusivos en las empresas adheridas" />
+  <meta property="og:description"
+    content="Acumulá puntos y canjealos por beneficios exclusivos en las empresas adheridas" />
   <meta property="og:image" content="https://fidebill-clientes-front.vercel.app/assets/LogoFidebill.png" />
   <meta property="og:url" content="https://fidebill-clientes-front.vercel.app" />
   <meta property="og:type" content="website" />
@@ -20,13 +22,26 @@
 
   <!-- Twitter Meta Tags -->
   <meta name="twitter:title" content="Fidebill">
-  <meta name="twitter:description" content="Acumulá puntos y canjealos por beneficios exclusivos en las empresas adheridas">
+  <meta name="twitter:description"
+    content="Acumulá puntos y canjealos por beneficios exclusivos en las empresas adheridas">
   <meta name="twitter:image" content="https://fidebill-clientes-front.vercel.app/assets/LogoFidebill.png">
   <meta property="twitter:url" content="https://fidebill-clientes-front.vercel.app">
   <meta property="twitter:domain" content="fidebill-clientes-front.vercel.app">
   <meta name="twitter:card" content="summary_large_image">
-
   <!--META-->
+
+  <script>
+    window.deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      window.deferredPrompt = e;
+    });
+    let empresa = window.location.pathname.split("/")[1];
+    let link = document.createElement("link");
+    link.setAttribute("rel", "manifest");
+    link.setAttribute("href", `http://localhost:5019/vistaclientes/manifest?empresa=${empresa}`);
+    // link.setAttribute("href", `https://fidebill-clientes-back-ckbub4ayfpcgfpa3.canadaeast-01.azurewebsites.net/vistaclientes/manifest?empresa=${empresa}`);
+    document.head.appendChild(link);
+  </script>
 
   <title>Fidebill</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">

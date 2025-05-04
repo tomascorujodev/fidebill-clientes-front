@@ -53,8 +53,8 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
       {
         estiloBorde ?
           <>
-            <img src={`/assets/${empresa}.png`} alt="..." style={{ width: "300px" }} />
-            <img src="/assets/Socios.png" alt="..." style={{ width: "120px" }} />
+            <img src={`/assets/${empresa}.png`} alt="logo empresa" style={{ width: "300px" }} />
+            <img src="/assets/Socios.png" alt="Socios de Fidebill" style={{ width: "120px" }} />
 
             <div className="card-rounded" style={{ maxWidth: "400px", width: "85%", borderColor: `${estiloBorde}`, boxShadow: `${estiloBorde} 0px 0rem 2rem` }}>
               <div className="card-body p-4">
@@ -113,7 +113,7 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
             <div className="mt-4">
               <img
                 src="/assets/PoweredByFidebill.png"
-                alt="FideBill Logo"
+                alt="Powered by FideBill"
                 width="238"
                 height="44"
               />
