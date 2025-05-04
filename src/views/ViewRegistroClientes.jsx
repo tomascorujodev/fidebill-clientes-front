@@ -452,7 +452,7 @@ export default function ViewRegistroClientes() {
 
   return (
     <div className="container mt-4 align-content-center">
-      <img src={`/assets/${empresa}.png`} className="d-block w-100 h-100 object-cover" alt="..." />
+      <img className="d-flex my-4" src={`/assets/${empresa}.png`} alt="logo empresa" style={{ justifySelf: "center", width: "300px" }} />
       <Card className="shadow-sm">
         <Card.Header>
           <h2 className="text-center">Registro de usuario</h2>

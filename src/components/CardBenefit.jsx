@@ -17,7 +17,7 @@ export default function CardBenefit({ tipo, descripcion, dias, porcentajeReinteg
   return (
     <div className={`promo-card ${expanded ? "expanded" : ""}`}>
       <div className="promo-card-header">
-        <img src={urlImagen} className="promo-logo" onError={(e) => { if (!e.target.dataset.fallback) { e.target.src = `/assets/${empresa}.png`; e.target.dataset.fallback = "true"; e.target.style.width = "110px"; } }} />
+        <img src={urlImagen} className="promo-logo" onError={(e) => { if (!e.target.dataset.fallback) { e.target.src = `/assets/${empresa}.png`; e.target.dataset.fallback = "true"; e.target.style.width = "110px"; } }} alt="imagen del beneficio" />
         {
           porcentajeReintegro &&
           <div className="promo-badge">{porcentajeReintegro}% de reintegro</div>

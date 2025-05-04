@@ -13,8 +13,10 @@ export function LocalesProvider({ children }) {
     useEffect(() => {
         const obtenerLocales = async () => {
             let result = await GET("vistaclientes/obtenerlocales");
-            result = await result.json();
-            setLocales(result);
+            if (result?.status == 200) {
+                result = await result.json();
+                setLocales(result);
+            }
         };
         obtenerLocales();
     }, []);

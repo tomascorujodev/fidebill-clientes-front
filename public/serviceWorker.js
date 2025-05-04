@@ -1,4 +1,3 @@
-// public/service-worker.js
 self.addEventListener('push', function (event) {
     let data = event.data.json();
     let options = {
