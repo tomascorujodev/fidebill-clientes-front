@@ -38,8 +38,8 @@
     let empresa = window.location.pathname.split("/")[1];
     let link = document.createElement("link");
     link.setAttribute("rel", "manifest");
-    link.setAttribute("href", `http://localhost:5019/vistaclientes/manifest?empresa=${empresa}`);
-    // link.setAttribute("href", `https://fidebill-clientes-back-ckbub4ayfpcgfpa3.canadaeast-01.azurewebsites.net/vistaclientes/manifest?empresa=${empresa}`);
+    // link.setAttribute("href", `http://localhost:5019/vistaclientes/manifest?empresa=${empresa}`);
+    link.setAttribute("href", `https://fidebill-clientes-back-ckbub4ayfpcgfpa3.canadaeast-01.azurewebsites.net/vistaclientes/manifest?empresa=${empresa}`);
     document.head.appendChild(link);
   </script>
 
