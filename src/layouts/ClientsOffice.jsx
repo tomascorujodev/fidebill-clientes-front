@@ -12,7 +12,6 @@ export default function ClientsOffice() {
     const { estiloBorde, nombreEmpresa } = useEmpresa();
     const [registration, setRegistration] = useState(null);
     const [showModal, setShowModal] = useState(false);
-    const [deferredPrompt, setDeferredPrompt] = useState(null);
     const [showInstallButton, setShowInstallButton] = useState(false);
     const [installButtonPosition, setInstallButtonPosition] = useState(Math.min(window.innerWidth * 0.9, 580));
     const [loading, setLoading] = useState(false);
@@ -43,8 +42,7 @@ export default function ClientsOffice() {
                     setShowModal(true);
                 }
             }
-            if (!window.matchMedia('(display-mode: standalone)').matches && window.deferredPrompt) {
-                setDeferredPrompt(window.deferredPrompt);
+            if ((!window.matchMedia('(display-mode: standalone)').matches || !window.navigator.standalone) && window.deferredPrompt) {
                 setShowInstallButton(true);
             }
         })()
@@ -70,13 +68,7 @@ export default function ClientsOffice() {
     }
 
     async function InstallPwa() {
-        if (!deferredPrompt) {
-            setShowInstallButton(false);
-            return;
-        }
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`User response: ${outcome}`);
+        window.deferredPrompt?.prompt();
         setShowInstallButton(false);
     }
 
