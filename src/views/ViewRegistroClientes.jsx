@@ -489,7 +489,7 @@ export default function ViewRegistroClientes() {
                       {[0, 1, 2, 3, 4, 5].map((index) => (
                         <input
                           key={index}
-                          type="text"
+                          type="number"
                           maxLength={1}
                           className="verification-code-input"
                           value={formData.verificationCode[index] || ""}

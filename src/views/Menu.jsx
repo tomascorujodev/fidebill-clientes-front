@@ -2,22 +2,21 @@ import { useState } from 'react';
 import Carousel from '../components/Carousel';
 import MapBranch from '../components/MapBranch';
 import { Button, Modal } from 'react-bootstrap';
+import { useEmpresa } from '../contexts/EmpresaContext';
 
 export default function Menu() {
+  const { estiloBorde } = useEmpresa();
   const [showModal, setShowModal] = useState(false);
   const [activeImage, setActiveImage] = useState(null);
 
   const browsers = [
     { name: 'Safari', img: '/instructions/safari.png' },
-    { name: 'Vivaldi', img: '/instructions/vivaldi.png' },
-    { name: 'Brave', img: '/instructions/brave.png' },
-    { name: 'Samsung Internet', img: '/instructions/samsung.png' },
     { name: 'Firefox', img: '/instructions/firefox.png' },
+    { name: 'Samsung Internet', img: '/instructions/samsung.png' },
     { name: 'Opera', img: '/instructions/opera.png' },
+    { name: 'Brave', img: '/instructions/brave.png' },
+    { name: 'Vivaldi', img: '/instructions/vivaldi.png' },
   ];
-  if (window.deferredPrompt) {
-
-  }
 
   return (
     <>
@@ -25,10 +24,10 @@ export default function Menu() {
       <br />
       <Carousel />
       {
-        window.deferredPrompt &&
+        !window.deferredPrompt && (!window.matchMedia('(display-mode: standalone)').matches || !window.navigator.standalone) &&
         < div className="d-flex justify-content-center mt-3">
-          <Button variant="primary" onClick={() => setShowModal(true)}>
-            Mostrar instrucciones de instalación
+          <Button style={{backgroundColor: estiloBorde, border: 0, width: "90%"}} variant="primary" onClick={() => setShowModal(true)}>
+            Instalar aplicación
           </Button>
         </div >
       }
