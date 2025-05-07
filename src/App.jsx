@@ -55,7 +55,7 @@ export default function App() {
       case 200:
         return (
           isLoggedIn ?
-            <Route element={<ClientsOffice />}>
+            <Route element={<ClientsOffice setChangePassword={setChangePassword}/>}>
               <Route path="/:empresa/*" element={<Menu />} />
               <Route path="/:empresa/sucursales" element={<Sucursales />} />
               <Route path="/:empresa/beneficios" element={<Beneficios />} />
@@ -93,7 +93,7 @@ export default function App() {
                   routes
                 }
               </Routes>
-              {/* <ChangePasswordModal changePassword={changePassword} setChangePassword={setChangePassword} /> */}
+              <ChangePasswordModal changePassword={changePassword} setChangePassword={setChangePassword} />
             </BrowserRouter>
 
           </>

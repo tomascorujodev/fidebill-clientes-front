@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Carousel from '../components/Carousel';
 import MapBranch from '../components/MapBranch';
 import { Button, Modal } from 'react-bootstrap';
+import '../assets/css/Menu.css';
 
 export default function Menu() {
   const [showModal, setShowModal] = useState(false);

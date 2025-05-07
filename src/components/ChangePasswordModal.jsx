@@ -65,10 +65,12 @@ export default function ChangePasswordModal({ changePassword, setChangePassword 
                 {
                     !ok &&
                     <Form>
+                        <input type="text" name="username" defaultValue="username" autoComplete="username" hidden></input>
                         <Form.Group className="mb-3">
                             <Form.Label>Nueva Contraseña</Form.Label>
                             <Form.Control
                                 type="password"
+                                autoComplete="new-password"
                                 placeholder="Ingresa tu nueva contraseña"
                                 value={newPassword}
                                 onChange={(e) => setNewPassword(e.target.value)}
@@ -78,6 +80,7 @@ export default function ChangePasswordModal({ changePassword, setChangePassword 
                             <Form.Label>Confirmar Contraseña</Form.Label>
                             <Form.Control
                                 type="password"
+                                autoComplete="new-password"
                                 placeholder="Repite tu nueva contraseña"
                                 value={confirmPassword}
                                 onChange={(e) => setConfirmPassword(e.target.value)}

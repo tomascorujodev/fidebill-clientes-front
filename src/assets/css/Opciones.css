@@ -1,0 +1,23 @@
+.opciones-container {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    right: 0;
+    top: 0;
+    background-color: #F8F9FA;
+    z-index: 11;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    opacity: 0;
+}
+
+.opciones-container.open {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.opciones-container.closing {
+    transform: translateX(100%);
+    opacity: 0;
+}

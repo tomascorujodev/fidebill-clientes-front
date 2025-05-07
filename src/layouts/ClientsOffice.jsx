@@ -7,14 +7,16 @@ import { urlBase64ToUint8Array } from '../utils/vapidConverter';
 import { GET, POST } from '../services/Fetch';
 import { useEmpresa } from '../contexts/EmpresaContext';
 import { Button, Modal, Spinner } from 'react-bootstrap';
+import Opciones from '../components/Opciones.jsx';
 
-export default function ClientsOffice() {
+export default function ClientsOffice({setChangePassword}) {
     const { estiloBorde, nombreEmpresa } = useEmpresa();
     const [registration, setRegistration] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [showInstallButton, setShowInstallButton] = useState(false);
     const [installButtonPosition, setInstallButtonPosition] = useState(Math.min(window.innerWidth * 0.9, 580));
     const [loading, setLoading] = useState(false);
+    const [opciones, setOpciones] = useState(false);
 
     useEffect(() => {
         function handleResize() {
@@ -84,7 +86,7 @@ export default function ClientsOffice() {
                         </Button>
                     </div>
                 )}
-                <MobileNavbar></MobileNavbar>
+                <MobileNavbar setOpciones={setOpciones}></MobileNavbar>
             </LocalesProvider>
             <Modal show={showModal} onHide={() => setShowModal(false)} aria-modal="true" role="dialog" aria-labelledby="modal-title">
                 <Modal.Header closeButton>
@@ -97,6 +99,7 @@ export default function ClientsOffice() {
                     </>
                 </Modal.Footer>
             </Modal>
+            {opciones && <Opciones setOpciones={setOpciones} setChangePassword={setChangePassword}/>}
         </>
     )
 }
