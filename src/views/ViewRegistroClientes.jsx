@@ -234,7 +234,9 @@ export default function ViewRegistroClientes() {
               case -4:
                 localStorage.setItem(empresa, rsp.token)
                 setEmailSent(true);
-                setSuccess("Ya tiene un código pendiente. Por favor revise su correo. Verifique también las carpetas de Spam, Correo no deseado o Promociones.");
+                setSuccess(<>
+                  Ya tiene un código pendiente. Por favor revise su correo. Verifique también las carpetas de <b>Spam, Correo no deseado o Promociones</b>.
+                </>);
                 break;
             }
             break;
@@ -490,6 +492,7 @@ export default function ViewRegistroClientes() {
                         <input
                           key={index}
                           type="text"
+                          inputMode="numeric"
                           maxLength={1}
                           className="verification-code-input"
                           value={formData.verificationCode[index] || ""}
@@ -647,7 +650,7 @@ export default function ViewRegistroClientes() {
             <Modal.Title>¡Registro completado!</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Alert style={{margin: "0px"}} variant="warning">Para ingresar a la aplicación, utilice su DNI como usuario y contraseña</Alert>
+            <Alert style={{margin: "0px"}} variant="warning">Para ingresar a la aplicación, <b>utilice su DNI como usuario y contraseña</b></Alert>
           </Modal.Body>
           <Modal.Footer >
             <div className="d-flex justify-content-center w-100">

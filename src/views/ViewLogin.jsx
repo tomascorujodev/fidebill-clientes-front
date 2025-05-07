@@ -74,7 +74,7 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
                       required
                     />
                   </div>
-                  <div className="mb-3">
+                  <div>
                     <label htmlFor="password" className="form-label">
                       Contraseña
                     </label>
@@ -87,6 +87,11 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
                       placeholder="Ingrese su contraseña"
                       required
                     />
+                    <div className="mt-1">
+                      <p style={{ color: "gray", fontSize: "11px", textAlign: "center"}}>
+                        Si es su primera vez iniciando sesión, utilice su DNI como contraseña.
+                      </p>
+                    </div>
                   </div>
                   {
                     isLoading ?
@@ -94,7 +99,7 @@ export default function ViewLogin({ setIsLoggedIn, setChangePassword }) {
                         <span className="visually-hidden">Cargando...</span>
                       </div>
                       :
-                      <button type="submit" className="btn btn-primary w-100 mt-3 custom-button">
+                      <button type="submit" className="btn btn-primary w-100 mt-2 custom-button">
                         Iniciar Sesión
                       </button>
                   }
