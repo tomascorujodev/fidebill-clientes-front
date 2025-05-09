@@ -81,7 +81,7 @@ export default function ClientsOffice({setChangePassword}) {
                 <Outlet />
                 {showInstallButton && (
                     <div className="d-flex w-100 justify-content-center">
-                        <Button style={{ position: "fixed", bottom: "76px", backgroundColor: estiloBorde, border: 0, width: installButtonPosition, zIndex: 99 }} onClick={InstallPwa}>
+                        <Button style={{ position: "fixed", bottom: "76px", backgroundColor: estiloBorde, border: 0, width: installButtonPosition, zIndex: 15 }} onClick={InstallPwa}>
                             Instalar aplicación
                         </Button>
                     </div>

@@ -3,8 +3,10 @@ import Carousel from './Carousel';
 import MapBranch from './MapBranch';
 import { Button, Modal } from 'react-bootstrap';
 import "../assets/css/Opciones.css"
+import { useEmpresa } from '../contexts/EmpresaContext';
 
 export default function Opciones({ setOpciones, setChangePassword }) {
+    const { estiloBorde } = useEmpresa();
     const [closing, setClosing] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -24,8 +26,12 @@ export default function Opciones({ setOpciones, setChangePassword }) {
 
     return (
         <div
+        style={{border: `3px solid ${estiloBorde}`}}
             className={`opciones-container shadow p-3 ${open ? 'open' : ''} ${closing ? 'closing' : ''}`}
         >
+            <br />
+            <h6 style={{textAlign: "center"}}>Configuración</h6>
+            <br />
             <button
                 type="button"
                 className="btn-close position-absolute"
@@ -33,10 +39,10 @@ export default function Opciones({ setOpciones, setChangePassword }) {
                 aria-label="Close"
                 onClick={handleClose}
             ></button>
-            <br /><br />
 
-            <div className="d-flex">
+            <div className="d-flex justify-content-center">
                 <button
+                    style={{fontSize: "0.8rem"}}
                     type="button"
                     className="btn btn-secondary"
                     onClick={setChangePassword}
